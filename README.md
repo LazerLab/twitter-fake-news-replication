@@ -1,6 +1,6 @@
 # Replication Materials Details
 
-[![DOI](https://zenodo.org/badge/162752654.svg)](https://zenodo.org/badge/latestdoi/162752654)
+[![DOI](https://zenodo.org/badge/162752654.svg)](https://doi.org/10.5281/zenodo.2483311)
 
 This repository contains public replication materials for the paper "Fake News on Twitter During the 2016 U.S. Presidential Election."
 
@@ -51,7 +51,7 @@ pct_black - percentage of all shares/exposures that were to/from black sites
 pct_fake - percentage of all shares/exposures that were to/from any fake news site
 ```
 
-## Coexposure analysis
+## ```compare_to_pew```
 
 ### Code
 The script ```coexposure_network/analysis.R``` generates Figure 7 from the main text, as well as Figures S10 and S11 in the supplementary.
