@@ -53,6 +53,7 @@ pct_fake - percentage of all shares/exposures that were to/from any fake news si
 
 ## ```coexposure_network```
 
+
 ### Code
 The script ```coexposure_network/analysis.R``` generates Figure 7 from the main text, as well as Figures S10 and S11 in the supplementary.
 
@@ -79,6 +80,8 @@ There are two files used in the script that are not available in this public dat
 
 ## ```compare_to_pew```
 
+Code and data to replicate Figure S1.
+
 ### Code
 The script ```compare_to_pew/analyze_representativeness_pew.R``` generates Figure S1 from the supplementary.
 
@@ -93,7 +96,9 @@ There are two files used in the script that are not available in this public dat
 
 
 
-## Figure S4 (Political Classifier Evaluation)
+## ```political_classifier_evaluation```
+
+Code and data to replicate Figure S4 in the paper.
 
 ### Code
 The script ```political_classifier_evaluation/figure_s4.R``` generates Figure S4, for the political classifier evaluation.
