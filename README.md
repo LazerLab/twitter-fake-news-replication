@@ -51,7 +51,7 @@ pct_black - percentage of all shares/exposures that were to/from black sites
 pct_fake - percentage of all shares/exposures that were to/from any fake news site
 ```
 
-## ```compare_to_pew```
+## ```coexposure_network```
 
 ### Code
 The script ```coexposure_network/analysis.R``` generates Figure 7 from the main text, as well as Figures S10 and S11 in the supplementary.
@@ -77,7 +77,7 @@ There are two files used in the script that are not available in this public dat
 - ```coexposure_network/data/fb_top500_domain_affl.csv``` is taken from the Bakshy et al. Facebook study, and must be requested from those authors. 
 
 
-## Representativeness (PEW)
+## ```compare_to_pew```
 
 ### Code
 The script ```compare_to_pew/analyze_representativeness_pew.R``` generates Figure S1 from the supplementary.
@@ -90,3 +90,28 @@ There are two files used in the script that are not available in this public dat
 
 - ```compare_to_pew/data/panel_stats.csv``` contains information on panel members party, sex, race_ethnicity, and age (anonymized). ***This file is contained only in the restricted release***.
 
+
+
+
+## Figure S4 (Political Classifier Evaluation)
+
+### Code
+The script ```political_classifier_evaluation/figure_s4.R``` generates Figure S4, for the political classifier evaluation.
+
+### Data
+
+***This file is only available under the restricted data release***. 
+
+The file ```political_classifier_evaluation/pol_classifier_eval_survey_res_20k.csv``` gives results of the annotation task, and has the following columns:
+
+```
+tweet_date - (twitter formatted)
+from_file - ignore, this is for our records to remember what raw data file its from
+election - number of MTurk annotators giving "U.S. Election" as the answer
+idk - N Turkers giving "I don't know"
+other - N Turkers giving "Something else"
+politics - N Turkers giving "U.S. politics in general
+raw_text  - the text shown to annotators. Note that this includes the text of quoted tweets and translations
+answer - the final answer. This is a majority vote of turkers in most cases, if there was no agreement, its the decision of someone on our Northeastern team.
+is_pol - Did the classifier say it was about politics?
+```
