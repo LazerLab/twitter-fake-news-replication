@@ -8,7 +8,7 @@ Please note that some of the code in this repository requires access to the rest
 
 # Structure of the Repository
 
-Each subfolder within this repository contains replication materials and/or data for a particular result in the paper.  Within each subfolder, code for replication is provided. There is also, within each subfolder, a ```data``` directory where data for that particular analysis is housed. Where this data is restricted, we note this, and note where in the restricted data release this data can be found. Finally, there is an ```img``` file, where any images output by the code will be placed.
+Each subfolder within this repository contains replication materials and/or data for a particular result in the paper.  Within each subfolder, code for replication is provided. There is also, within each subfolder, a ```data``` directory where data for that particular analysis is housed. Where this data is restricted, we note this, and note where in the restricted data release this data can be found. Finally, there is an ```img``` file, where any images output by the code will be placed. ***Please note, where these directories are not present, you will need to create them (Github does not allow commits of empty folders) before running analyses***
 
 For each subfolder, the expectation is that the code is run from the top level directory (i.e. this directory) of this repository.
 
