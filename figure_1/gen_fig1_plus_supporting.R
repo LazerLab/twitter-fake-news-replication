@@ -121,7 +121,7 @@ gen_timeseries_analysis <- function(data_filename,data_type, penalty_val=.001, f
 exposure_stats <- gen_timeseries_analysis("figure_1/data/daily_counts_exposures.csv","exp",.001)
 
 # Figure S6, Bottom row of Figure S8
-source("domain_lists/nyhan.R")
+source("util/domain_lists/nyhan.R")
 exposure_nyhan_stats <- gen_timeseries_analysis("figure_1/data/daily_counts_exposures_guess.csv",
                                                 "exp_nyh",
                                                 .0003,
