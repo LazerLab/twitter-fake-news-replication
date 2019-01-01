@@ -51,6 +51,12 @@ pct_black - percentage of all shares/exposures that were to/from black sites
 pct_fake - percentage of all shares/exposures that were to/from any fake news site
 ```
 
+## Exposure, sharing, and sharing per exposure regressions
+
+The analysis in ```exp_share_regressions/exp_share_reg.Rmd``` covers the results that focus on the individual characteristics associated with exposure and sharing of fake news. These are reported in the main body of the paper (sections 'who was exposed to fake news sources?' and 'who shared fake news sources?' as well as in sections S11-13 of the supplamentary materials. 
+
+While the data for replicating this analysis is available under restricted-access, the output of its execution on (de-identified data) is available for easy viewing in html format at ```exp_share_regressions/exp_share_reg.nb.html```.
+
 ## ```coexposure_network```
 
 
