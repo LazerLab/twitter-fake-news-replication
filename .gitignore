@@ -1,1 +1,4 @@
 .DS_Store
+restricted_data
+exp_share_regressions/__cache__
+.Rproj.user
