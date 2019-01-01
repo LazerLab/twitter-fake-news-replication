@@ -1,0 +1,522 @@
+---
+title: "Exposure, sharing, and sharing per exposure regressions"
+author: "Nir Grinberg"
+date: "12/31/2018"
+output:
+  html_notebook:
+    top: yes
+  md_document:
+    toc: yes
+  pdf_document:
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r global_settings}
+library(knitr)
+opts_chunk$set(eval=TRUE, include=TRUE, cache=FALSE, cache.path='./__cache__/',
+               bootstrap.thumbnail.size= 'col-md-12', bootstrap.thumbnail = TRUE, bootstrap.show.code= FALSE, 
+               fig.path='.', dev=c('png','pdf','svg','cairo_ps'), fig.width=8, fig.height=4, dpi=300)
+
+knit_hooks$set(embed_fonts = function(before, options, envir) {
+  if ((!before) & (length(options['label'])>0)) {
+    old_path <- paste0(options['fig.path'], options['label'], '.pdf')
+    new_path <- paste0(options['fig.path'], options['label'], '-1.pdf')
+    if (file.exists(old_path)) {
+        embed_fonts(old_path, outfile = new_path)
+    }
+    NULL
+  }
+})
+# library(rmarkdown)
+# render('exp_share_reg', 'all')
+```
+
+```{r imports, eval=TRUE, echo=TRUE, results='hide', warning=FALSE, error=FALSE, message=FALSE}
+library(data.table)
+library(ggplot2)
+library(ggridges)
+library(scales)
+library(stats)
+library(Hmisc)
+# library(RColorBrewer)
+library(car)
+library(stargazer)
+# library(doParallel)
+# registerDoParallel(cores = 7)
+library(arm)
+library(visreg)
+library(effects)
+```
+
+```{r load_exp_data}
+vars <- c("urls", "urls_panel", "urls_exp", "friendships", "panel")
+if (length(setdiff(vars, ls(all.names = T)))>0) {
+  source("../util/load_exp_data.R", chdir = T)
+}
+pol_act_l <- c("extreme left", "left", "center", "right", "extreme right", 
+               "apolitical", "bot", "superconsumer", "supersharer")
+```
+
+```{r panel_stats}
+print("Per-person average proportion of fake news in political URLs")
+print(round(smean.cl.boot(panel[is_outlier==F & as.numeric(pol_affl_act)<=6]$exp_rate*100),2))
+print("Per-person average number of fake news potential exposures in Oct 7 - Nov 14, excluding outliers and apolitical")
+print(round(smean.cl.boot(panel[is_outlier==F & as.numeric(pol_affl_act)<=5]$n_fn_exp_last_month*10),0))
+print("Then, including apolitical")
+print(round(smean.cl.boot(panel[is_outlier==F & as.numeric(pol_affl_act)<=6]$n_fn_exp_last_month*10),0))
+panel_summary <- panel[is_bot==F & is_compromised==F, .(n_ppl=.N,
+                               fn_exp_pct=round(mean(exp_rate*100), 1),
+                               female_pct=round(100*sum(gender=="Female")/.N, 1),
+                               white_pct=round(100*sum(is_nonwhite==F)/.N, 1),
+                               swingstate_pct=round(100*sum(is_swingstate=="Yes")/.N, 1),
+                               followers_per_followee=round(mean(followers_count/friends_count, na.rm = T), 1),
+                               n_pol_exp_weekly=round(mean(10*(n_pol_exp-n_fn_exp)/18), 0),
+                               n_tweet_exc_study=round(mean(ntweets_total-n_pol_shares), 0),
+                               n_fn_exp_last_month = round(mean(n_fn_exp_last_month*10), 0),
+                               pct_ppl_w_sign_ammount = round(100*sum(exp_rate>0.05)/.N, 1),
+                               pct_ppl_sharing_fn = round(100*sum(n_fn_shares > 0)/sum(n_pol_shares > 0), 1)
+                           ), by=.(pol_affl_act)][match(pol_act_l, pol_affl_act)][!is.na(pol_affl_act)]
+stargazer(panel_summary, summary=F, #digits = 1, digits.extra = 1,
+          # intercept.top = T,
+          float.env = "table*", 
+          header = F, no.space=TRUE, flip = T, rownames = T)
+# significant proportion t-test
+sign_sign <- copy(panel[is_bot==F & is_compromised==F & pol_affl_act %in% c("extreme left", "left", "right", "extreme right"),.(exp_rate, pol_affl_act)])
+sign_sign <- sign_sign[, pol_lean:=ifelse(pol_affl_act %in% c("extreme left", "left"), "left", "right")]
+sign_sign <- sign_sign[, sign_level:=exp_rate>0.05]
+# print(t.test(sign_level ~ pol_lean, data = sign_sign, alternative="less"))
+mean_diff <- attr(smean.cl.boot(sign_sign[pol_lean=="left"]$sign_level, B = 10000, reps = T),"reps") - 
+             attr(smean.cl.boot(sign_sign[pol_lean=="right"]$sign_level, B = 10000, reps = T),"reps")
+print(summary(mean_diff))
+```
+
+```{r fn_exp_dist_by_pol_affl, fig.width=8, fig.height=8}
+plot_df <- panel[is_compromised==F & is_bot==F & pol_affl_act!="apolitical",]
+lvls_rev <- function(f) factor(f, rev(levels(f)))
+plot_lbls <- plot_df[,.(
+                    lbl=sprintf("N=%d, %2.0f%%", .N, 100*sum(n_fn_exp<1)/.N), exp_rate=median(exp_rate[n_fn_exp>0])), 
+                    by=pol_affl_act]
+ggplot(plot_df[n_fn_exp>0], aes(x=exp_rate, y=lvls_rev(pol_affl_act) )) + 
+  geom_density_ridges_gradient(
+    aes(fill = ..x..), scale = 2, size = 0.3
+  ) +
+  scale_fill_gradientn(
+    colours = c("#0D0887FF", "#CC4678FF", "#F0F921FF"),
+    guide = "none"
+  ) +
+  # geom_text(data = plot_lbls, aes(label=nz_pct), size=4, colour="black", vjust = -2, nudge_x = -0.3, hjust = 0.5) +
+  geom_text(data = plot_lbls, aes(label=lbl, x=0.00015), size=4, colour="black", vjust = -3.5, hjust = 0) +
+  scale_x_log10(labels=percent, breaks = c(0.001, 0.01, 0.1), limits = c(0.0001, 0.6), expand = c(0, 0) ) +
+  scale_y_discrete(expand = c(0.04, 0)) +
+  annotation_logticks(sides = "b") +
+  labs(x="Fraction of fake news", y = NULL)
+```
+
+# Exposure regression
+
+```{r exp_reg_prep}
+exp_reg <- copy(panel)
+# exclude supersharers and compromised accounts
+exp_reg <- exp_reg[is_supersharer==F & is_compromised==F & is_bot==F,]
+reg_pol_act_l <- c("extreme left", "left", "center", "right", "extreme right", "apolitical", "superconsumer")
+exp_reg <- exp_reg[, pol_affl_act:=factor(pol_affl_act, reg_pol_act_l)]
+exp_reg <- exp_reg[, pol_affl_act:=relevel(pol_affl_act, ref="center")]
+
+print("Fraction of people on the left/right with a meaningful level of fake news consumption (>5%):")
+print(exp_reg[pol_affl_act %in% reg_pol_act_l[c(1,2,4,5)],][,pol_affl_sign:=ifelse(pol_affl>0,"R","L")][,.(pct_ppl_w_lots_of_fn=100*sum(exp_rate>0.05)/.N), by=pol_affl_sign])
+# sel_cols <- c("fol_per_friend_log10", "n_pol_exp_exc_fn_per_week_log10", 
+#               "n_tweets_exc_study_log10", "exp_rate", "n_pol_exp", "n_fn_exp", 
+#               "followers_count", "friends_count", "ntweets_total")
+# exp_reg_summary <- exp_reg[, c(n_ppl=.N,
+#                               female_prop=sum(gender=="Female")/.N,
+#                               white_prop=sum(is_nonwhite==F)/.N,
+#                               swingstate_prop=sum(is_swingstate=="Yes")/.N,
+#                               base_unit(.SD[, sel_cols, with=F]))
+#                           , by=.(pol_affl_act)]
+```
+
+```{r exp_reg_1_vs_multi_model}
+# evaluate single vs. multiple models per bucket
+f <- cbind(n_fn_exp, n_pol_exp-n_fn_exp) ~ fol_per_friend_log10 + n_pol_exp_exc_fn_per_week_log10 + 
+  n_tweets_exc_study_log10 + age + gender + is_nonwhite + is_swingstate 
+f_single <- update(f,  ~ . + pol_affl_act)
+m_single <- glm(f_single, family = "binomial", data = exp_reg)
+f_multi <- update(f,  ~ ( . ) : pol_affl_act)
+m_multi <- glm(f_multi, family = "binomial", data = exp_reg[pol_affl_act %in% pol_act_l[1:5]])
+print(sprintf("Single model AIC = %2.0f, BIC = %2.0f", AIC(m_single), BIC(m_single)))
+print(sprintf("Multi-model AIC = %2.0f, BIC = %2.0f", AIC(m_multi), BIC(m_multi)))
+# [1] "Single model AIC = 1899289, BIC = 18993967"
+# [1]  "Multi-model AIC = 1207647, BIC = 1207916"
+# ====> Multimodel cuts AIC/BIC by more than a third!
+```
+
+```{r exp_reg_comp_models}
+models <- list()
+vifs <- list()
+for(i in 1:(length(reg_pol_act_l))) { 
+  models[[i]] <- glm(f, family = "quasibinomial", data = exp_reg[pol_affl_act==reg_pol_act_l[i]])
+  vifs[[i]] <- length(which(sqrt(vif(models[[i]])) > 2))
+}
+print(sprintf("Is sqrt(VIF)>2 (collinearity) found in any subgroup exposure model? %s",
+              as.character(any(vifs > 0)) ))
+stargazer(models, 
+          covariate.labels = c("Constant", 
+                               "\\multirow{2}{*}{\\mycell[l]{Followers/friends\\\\ratio (logged)}}",
+                               "\\multirow{2}{*}{\\mycell[l]{Political exp.\\\\(weekly, logged)}}", # excluding FN
+                               "\\multirow{2}{*}{\\mycell[l]{Num. tweets\\\\(logged)}}", # excluding tweets during study
+                               "Age", "Male", 
+                               "Nonwhite", "Swing state"),
+          # order = c(2, 1, 3:9), # doesn't work
+          dep.var.caption  = "Exposure rate to misinformation",
+          dep.var.labels.include = F,
+          column.labels = reg_pol_act_l,
+          ci = TRUE, ci.level = 0.95,
+          intercept.bottom = F,
+          digits = 1, digits.extra = 1,
+          # intercept.top = T,
+          float.env = "table*", 
+          header = F, no.space=TRUE,
+          keep.stat = c("n","ll", "aic", "bic", "rsq", "adj.rsq"),
+          label = "tbl:exp_reg")
+```
+
+```{r exp_reg_main_effects}
+cont_vars <- c("n_pol_exp_exc_fn_per_week_log10"="Political exp. (weekly)",
+               # "n_friends_log10"="Num. Friends",
+               "fol_per_friend_log10"="Followers to Friends",
+               "n_tweets_exc_study_log10"="Num. non-political tweets",
+               "age"="Age"
+)
+disc_vars <- c("gender"="Gender",
+               "is_nonwhite"="Nonwhite",
+               "is_swingstate"="Swingstate")
+
+vars <- c(cont_vars,disc_vars)
+plts  <- vector(mode="list", length=length(vars))
+names(plts) <- names(vars)
+for(s in names(vars)){
+  print(s)
+  is_log10 <- grepl("log10$", s)==T
+  var_eff_dt <- data.table()
+  for(i in 1:5) { 
+    v <- visreg(models[[i]], s, rug=T, scale="response", partial=F, plot=F)
+    if(is_log10==T){
+      v$fit[,s] <- 10^(v$fit[,s])
+    }
+    v$pol_affl_act <- pol_act_l[i]
+    var_eff_dt <- rbind(var_eff_dt, 
+                        data.table(pol_affl_act=pol_act_l[i], x=v$fit[,s], y=v$fit[,"visregFit"],
+                                   ymin=v$fit[,"visregLwr"], ymax=v$fit[,"visregUpr"]))
+  }
+  var_eff_dt <- var_eff_dt[, pol_affl_act:=factor(pol_affl_act, levels=pol_act_l)]
+  if(vars[[s]] %in% cont_vars){
+    plts[[s]] <- ggplot(var_eff_dt, aes(x=x,y=y, group=pol_affl_act)) +
+      geom_ribbon(aes(ymin=ymin, ymax=ymax), alpha=.2) +
+      geom_line(aes(color=pol_affl_act, size=pol_affl_act, linetype=pol_affl_act)) +
+      scale_color_manual(values=c('#2c7bb6', '#2c7bb6', '#000000', '#d7191c','#d7191c'), name = "Political affiliation") +
+      scale_size_manual(values = c(1.5,1,1,1,1.5), name="Political affiliation") +
+      scale_linetype_manual(values = c("dashed", rep("solid", 3), "dashed"), name="Political affiliation")
+  } else {
+    plts[[s]] <- ggplot(var_eff_dt, aes(x=x,y=y)) + 
+      facet_wrap(~ pol_affl_act, nrow=1, scales="free_y") +
+      geom_pointrange(aes(ymin=ymin, ymax=ymax),size=0.5)
+  }
+  if(is_log10) { plts[[s]] <- plts[[s]] + scale_x_log10() }
+  plts[[s]] <- plts[[s]] + scale_y_continuous(expand = c(0,0), label = percent) + 
+    # coord_cartesian(ylim=c(0, .2)) + 
+    xlab(vars[[s]]) + ylab(NULL) + theme(legend.position = "none")
+  # if(vars[[s]] %in% cont_vars){ plts[[s]] <- direct.label(plts[[s]], "angled.boxes")}
+  if(s!=names(vars)[1]) { 
+    plts[[s]] <- plts[[s]]# + theme(strip.background = element_blank(),
+                           #        strip.text.x = element_blank()) 
+  }
+  plot(plts[[s]])
+}
+```
+
+# Sharing regression
+
+```{r share_reg_prep}
+share_reg <- copy(exp_reg[n_pol_shares > 0 & !pol_affl_act %in% c("apolitical","bot","superconsumer")])
+share_reg <- share_reg[, `:=`(
+    shared_fn                          = n_fn_shares > 0
+  , n_fn_exp_log10                     = log10(1+10*n_fn_exp)
+  , n_fn_exp_weekly_log10              = log10(1+10*n_fn_exp/18) # dataset consists of 18 weeks
+  , n_pol_shares_exc_fn_log10          = log10(.1 + n_pol_shares - n_fn_shares)
+  , n_pol_shares_exc_fn_weekly_log10   = log10(.1 + (n_pol_shares - n_fn_shares)/18)
+)]
+f <- shared_fn ~ pol_affl_act + fol_per_friend_log10 + n_pol_shares_exc_fn_weekly_log10 + 
+  n_tweets_exc_study_log10 + n_fn_exp_weekly_log10 + age + gender + is_nonwhite + 
+  is_swingstate
+print(sprintf("%2.1f%% of people who shared one political url or more (exc. outliers and apolitical peoples) shared fake news.", 
+      100*sum(share_reg$shared_fn==T)/nrow(share_reg)))
+print("breakdown by group:")
+print(share_reg[,.(shared_fn_pct=100*sum(shared_fn==T)/.N), by=pol_affl_act])
+print(summary(share_reg[, 
+  c("shared_fn", 'pol_affl_act','fol_per_friend_log10','n_pol_shares_exc_fn_weekly_log10',
+    'n_tweets_exc_study_log10','n_fn_exp_weekly_log10',
+    'age','gender','is_nonwhite','is_swingstate', "exp_rate", 
+    "followers_count", "friends_count", "ntweets_total", "n_pol_exp", "n_fn_exp"), with=F]))
+# print(t.test(shared_fn ~ (pol_affl_act=="right"), data = share_reg[pol_affl_act %in% reg_pol_act_l[c(1,2,3,4)]], alternative="less"))
+# print(t.test(shared_fn ~ (pol_affl_act=="extreme right"), data = share_reg[pol_affl_act %in% reg_pol_act_l[c(1,2,3,5)]], alternative="less"))
+print(summary(attr(smean.cl.boot(share_reg[pol_affl_act %in% reg_pol_act_l[c(1,2,3)]]$shared_fn, B = 10000, reps = T),"reps") - 
+    attr(smean.cl.boot(share_reg[pol_affl_act=="right"]$shared_fn, B = 10000, reps = T),"reps")))
+print(summary(attr(smean.cl.boot(share_reg[pol_affl_act %in% reg_pol_act_l[c(1,2,3)]]$shared_fn, B = 10000, reps = T),"reps") - 
+    attr(smean.cl.boot(share_reg[pol_affl_act=="extreme right"]$shared_fn, B = 10000, reps = T),"reps")))
+```
+
+```{r share_reg_compute_model}
+model <- glm(f, family = "quasibinomial", data = share_reg)
+print(sprintf("%d variables have sqrt(VIF)>2, suggesting multicollinearity is not an issue", 
+              length(which(sqrt(vif(model)) > 2))))
+stargazer(model, 
+          covariate.labels = c("Constant", "Extreme Left", "Left",
+                               "Right", "Extreme Right", 
+                               "\\multirow{2}{*}{\\mycell[l]{Followers/friends\\\\ratio (logged)}}",
+                               "\\multirow{2}{*}{\\mycell[l]{Political tweets\\\\(weekly, logged)}}", # excluding FN
+                               "\\multirow{2}{*}{\\mycell[l]{Other tweets\\\\(logged)}}", # excluding tweets during study
+                               "\\multirow{2}{*}{\\mycell[l]{Fake news exp.\\\\(weekly, logged)}}",
+                               "Age", "Male", "Nonwhite", "Swing state"),
+          # order = c(2, 1, 3:9), # doesn't work
+          dep.var.caption  = "Likelihood of Sharing Fake News",
+          dep.var.labels.include = F,
+          column.labels = pol_act_l,
+          ci = TRUE, ci.level = 0.95,
+          intercept.bottom = F,
+          digits = 1, digits.extra = 1,
+          # intercept.top = T,
+          float.env = "table*", 
+          header = F, no.space=TRUE,
+          keep.stat = c("n","ll", "aic", "bic", "rsq", "adj.rsq"),
+          label = "tbl:share_reg")
+```
+
+```{r share_reg_main_effects, embed_fonts=TRUE, fig.height=3}
+cont_vars <- c("fol_per_friend_log10"="Followers per Friend",
+               "n_pol_shares_exc_fn_weekly_log10" = "Political shares (weekly)", # weekly, excluding FN
+               "n_tweets_exc_study_log10"  = "Other tweets", # outside the study
+               "n_fn_exp_weekly_log10"            = "Fake news exp. (weekly)", # weekly
+               "age"="Age"
+)
+disc_vars <- c("gender"="Gender",
+               "is_nonwhite"="Nonwhite",
+               "is_swingstate"="Swingstate",
+               "pol_affl_act"="Political Affiliation")
+vars <- c(cont_vars,disc_vars)
+plts  <- vector(mode="list", length=length(vars))
+names(plts) <- names(vars)
+for(s in names(vars)){
+  print(s)
+  is_log10 <- grepl("log10$", s)==T
+  var_eff_dt <- data.table()
+  v <- visreg(model, s, rug=T, scale="response", partial=F, plot=F)
+  if(is_log10==T){
+    v$fit[,s] <- 10^(v$fit[,s])
+  }
+  var_eff_dt <- data.table( x=v$fit[,s], y=v$fit[,"visregFit"],
+                                 ymin=v$fit[,"visregLwr"], ymax=v$fit[,"visregUpr"])
+  if(vars[[s]] %in% cont_vars){
+    # strat_sample <- share_reg[, c(s, v$meta$y), with=F]
+    # x <- strat_sample[[1]]
+    # brks <- seq(min(x), max(x), length.out = 11)
+    # lbls <- brks[-11]+diff(brks)[1]/2
+    # if(is_log10==T) lbls <- 10^lbls
+    # strat_sample$s_grp <- cut(x, breaks = brks, labels = lbls, include.lowest = T)
+    # bin_prop <- strat_sample[, as.list(smean.cl.boot(as.numeric(.SD[[2]]))), by=.(s_grp)]
+
+    plts[[s]] <- ggplot(var_eff_dt, aes(x=x,y=y)) +
+      # geom_pointrange(data=bin_prop, aes(x=as.numeric(as.character(s_grp)), y=Mean, ymin=Lower, ymax=Upper)) +
+      geom_line()+
+      geom_ribbon(aes(ymin=ymin, ymax=ymax), alpha=.2) +
+      theme(legend.position = "none")
+  } else {
+    if (s == "pol_affl_act") var_eff_dt[, x:=factor(x, pol_act_l[pol_act_l %in% x])]
+    plts[[s]] <- ggplot(var_eff_dt, aes(x=x,y=y)) + 
+      geom_pointrange(aes(ymin=ymin, ymax=ymax),size=0.5) +
+      scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n"))
+  }
+  if(is_log10) { plts[[s]] <- plts[[s]] + scale_x_log10() }
+  plts[[s]] <- plts[[s]] + scale_y_continuous(expand = c(0.05,0), limits = c(0, NA), label = percent)+
+    xlab(vars[[s]]) + ylab(NULL)
+  if(s!=names(vars)[1]) { 
+    plts[[s]] <- plts[[s]]# + theme(strip.background = element_blank(),
+    #        strip.text.x = element_blank()) 
+  }
+  plot(plts[[s]])
+}
+```
+
+# Sharing per exposure regression
+
+Calculate political alignment of fake news sites
+```{r exp2share_fn_align}
+# Site alignment score
+# Based on panel members with a minimum exposure to politics (100 urls) 
+# and 3+ exposures in Timeline to a site.
+user_site_exp <- urls_exp[domain_color_num<=3, 
+                          .(n_exp=.N), 
+                          by=.(panel_uid, website, domain_color, domain_color_num)]
+user_site_exp <- merge(x=user_site_exp[n_exp>2,], 
+                       y=panel[is_outlier==F & pol_affl_act != "apolitical" & !is.na(pol_affl),
+                               .(user_id, pol_affl, pol_affl_act)],
+                       by.x = "panel_uid", by.y = "user_id")
+nd <- nrow(panel[is_outlier==F & pol_affl_act != "apolitical" & !is.na(pol_affl) & pol_affl<=0,])
+nr <- nrow(panel[is_outlier==F & pol_affl_act != "apolitical" & !is.na(pol_affl) & pol_affl>0,])
+wd <- 0.5*(nd+nr)/nd
+wr <- 0.5*(nd+nr)/nr
+user_site_exp <- user_site_exp[, reweight:=ifelse(pol_affl> 0, wr, wd)]
+site_align <- user_site_exp[,
+                        .(  align_raw = mean(pol_affl)
+                            , align     = weighted.mean(pol_affl, reweight)
+                            , n         = .N 
+                            , n_rep     = sum(pol_affl> 0)
+                            , n_dem     = sum(pol_affl<=0)),
+                        by=.(website, domain_color, domain_color_num)]
+# View(site_align[domain_color_num<=3 & n>10][order(align)])
+# based on hist(site_align[domain_color_num<=3 & n>10]$align)
+# identified two modes for the alignment scores & spot checked it.
+site_align <- site_align[n>10,
+                         site_align_bin:=ifelse(align>(-0.2), "conservative", "liberal")]
+site_align <- site_align[, site_cat:="fake news"]
+fn_align_scores <- site_align[n>10, .(website, align, site_align_bin, site_cat)]
+```
+
+```{r exp2share_fb_align}
+fb_domain_align <- fread('../restricted_data/fb_top500_domain_affl.csv', showProgress = F, 
+                         select = c("domain", "avg_align"))
+fb_domain_align <- unique(fb_domain_align, by=c("domain"))
+no_hard_news <- c("twitter.com", "en.wikipedia.org", "youtube.com", "m.youtube.com", "amazon.com", "vimeo.com")
+fb_domain_align <- fb_domain_align[!(domain %in% no_hard_news), ]
+setnames(fb_domain_align, "domain", "website")
+fb_domain_align <- fb_domain_align[abs(avg_align)>1/7, fb_align_bin:=ifelse(avg_align>0, "conservative", "liberal")]
+```
+
+```{r exp2share_prep}
+dir.create(opts_chunk$get("cache.path"), showWarnings = FALSE)
+file_path <- paste0(opts_chunk$get("cache.path"), "exp2share_reg.rds")
+if (file.exists(file_path)) {
+  exp2share_reg <- readRDS(file_path)
+} else {
+  sel_cat_l <- c('news/blog', 'Red','Black','Orange')
+  exp2share <- merge(x=urls_exp[n_pol_shares > 0 & website_cat %in% sel_cat_l,
+                                .(user_id, canonical_url, ts, tweet_id, panel_uid, website_cat)], 
+                     y=urls_panel[n_pol_shares > 0 & website_cat %in% sel_cat_l,
+                                  .(user_id, canonical_url, ts, where_url_found)], 
+                     by.x = c("panel_uid", "canonical_url"), by.y = c("user_id", "canonical_url"), 
+                     all.x = T, suffixes = c("", "_share"), allow.cartesian=T)
+  exp2share <- exp2share[, ts_diff:=ts_share-ts]
+  # match each share with closest exposure
+  exp2share <- exp2share[!is.na(ts) & (is.na(ts_diff) | (ts_diff>0)), ]
+  exp2share <- exp2share[(ts_diff>0), ts_is_closest:=min(ts_diff)==ts_diff, 
+                         by=.(panel_uid, canonical_url, ts_share)]
+  exp2share <- exp2share[is.na(ts_diff) | (ts_is_closest==T), ] # 26M exps
+  # eliminate a few cases where a single user shared the same url more times than 
+  # s/he was exposed to.
+  n_uniq_exps <- urls_exp[n_pol_shares > 0 & website_cat %in% sel_cat_l,
+                          .(n=.N),
+                          by=.(user_id, tweet_id, canonical_url, panel_uid)]
+  n_uniq_exps <- n_uniq_exps[,.(n_uniq_exps=.N), by=.(panel_uid, canonical_url)]
+  exp2share <- merge(x=exp2share, y=n_uniq_exps, by=c("panel_uid", "canonical_url"), all.x = T)
+  exp2share <- exp2share[, share2exp_diff := sum(!is.na(ts_share))-n_uniq_exps,
+                         by=.(panel_uid, canonical_url)]
+  exp2share <- exp2share[share2exp_diff<1,]
+  # map existing website cats to coarser ones and add panel members political affiliation bucket info
+  exp2share <- exp2share[, cat:=ifelse(website_cat == "news/blog", "Political News/Blog", "Fake News")]
+  exp2share <- exp2share[, cat:=factor(cat, c("Political News/Blog", "Fake News"))]
+  sel_cols <- c("user_id", "pol_affl", "pol_affl_act", "age", "gender", 
+                "is_nonwhite", "is_swingstate", "fol_per_friend_log10",
+                "n_tweets_exc_study_log10")
+  exp2share <- merge(x=exp2share, y=panel[is_compromised==F, sel_cols, with=F],
+                     by.x = "panel_uid", by.y = "user_id")
+  
+  # compute share rate per content category and political affiliation bucket
+  exp2share_raw_rates <- exp2share[, .(n_exps=.N, n_shares=sum(!is.na(ts_share)), spm=1000*sum(!is.na(ts_share))/.N),
+                                   by=.(pol_affl_act, cat)]
+  # ==> Bots shared exactly 0 for both News / FN 
+  # ==> Apolitical people shared 0/87 FN, and 6/3758 News
+  # =====> excluded from the following regression
+  set.seed(34564)
+  exp2share_reg <- exp2share[!(pol_affl_act %in% c("bot", "apolitical")),
+                             .SD[sample.int(.N, min(c(.N, 1000000))),],
+                             by=.(pol_affl_act, cat)]
+  exp2share_reg <- exp2share_reg[ , pol_affl_act:=factor(pol_affl_act)]
+  exp2share_reg <- exp2share_reg[, is_shared:=!is.na(ts_share)]
+  saveRDS(exp2share_reg, file = file_path)
+}
+```
+
+```{r exp2share_reg}
+exp2share_reg[, user_align_bin:=ifelse(pol_affl_act %in% c("extreme left", "left"), "liberal", ifelse(pol_affl_act %in% c("extreme right", "right"), "conservative", NA))]
+exp2share_reg <- merge(x=exp2share_reg, y=urls[,.(tweet_id, canonical_url, website)],
+                       by=c("tweet_id", "canonical_url"), all.x = T)
+exp2share_reg <- merge(x=exp2share_reg, y=fn_align_scores[, .(website, site_cat, site_align_bin)],
+                       by=c("website"), all.x = T)
+exp2share_reg <- merge(x=exp2share_reg, y=fb_domain_align,
+                       by="website", all.x = T)
+exp2share_reg <- exp2share_reg[is.na(site_cat) & !is.na(fb_align_bin), site_cat:="hard news"]
+exp2share_reg <- exp2share_reg[is.na(site_align_bin) & !is.na(fb_align_bin), site_align_bin:=fb_align_bin]
+exp2share_reg <- exp2share_reg[!is.na(site_align_bin) & site_align_bin==user_align_bin, 
+                               content_type:="congruent"]
+exp2share_reg <- exp2share_reg[!is.na(site_align_bin) & site_align_bin!=user_align_bin, 
+                               content_type:="incongruent"]
+exp2share_reg <- exp2share_reg[,`:=`(content_type=factor(content_type),
+                                     user_align_bin=factor(user_align_bin),
+                                     site_align_bin=factor(site_align_bin),
+                                     site_cat=factor(site_cat))]
+
+f <- is_shared ~ age + gender + is_nonwhite + is_swingstate + fol_per_friend_log10 + n_tweets_exc_study_log10 + site_cat:user_align_bin:content_type
+m2 <- bayesglm(f, family="binomial", data = exp2share_reg[!is.na(user_align_bin) & !is.na(content_type) & !is.na(site_cat),],
+              model = F, y = F)
+m2$y <- NULL; m2$model <- NULL; m2$data<- NULL
+m2$call_orig <- copy(m2$call)
+temp <- as.list(m2$call)
+temp[[1]] <- quote(glm)
+m2$call <- as.call(temp)
+print(summary(m2))
+ef <- as.data.table(effect("site_cat:user_align_bin:content_type", m2))
+print(ef)
+# notice that the N reported in the paper is slightly lower than the N reported
+# below by ~1000 (out of 2.7m) since some hard news websites were anonymized 
+# in our dataset to protect panel members' identity. Otherwise, the results 
+# are qualitatively the same. 
+stargazer(m2, 
+          covariate.labels = c("Constant", "Age", "Male", "Nonwhite", "Swing state",
+                               "Followers/friends ratio (logged)",
+                               "Num. nonpolitical tweets (logged)",
+                               "Conservative exposed to congruent fake news",
+                               "Conservative exposed to congruent hard news",
+                               "Liberal exposed to congruent fake news",
+                               "Liberal exposed to congruent hard news",
+                               "Conservative exposed to incongruent fake news",
+                               "Conservative exposed to incongruent hard news",
+                               "Liberal exposed to incongruent fake news",
+                               "Liberal exposed to incongruent hard news"),
+          dep.var.caption  = "Sharing per exposure",
+          dep.var.labels.include = F,
+          # column.labels = bucket_l,
+          ci = TRUE, ci.level = 0.95, align = F, single.row = F,
+          intercept.bottom = F,
+          digits = 1, digits.extra = 1,
+          # intercept.top = T,
+          float.env = "table*",
+          header = F, no.space=TRUE,
+          star.cutoffs = c(0.05, 0.01, 0.001),
+          keep.stat = c("n","ll", "aic", "bic", "rsq", "adj.rsq"),
+          label = "tbl:share2exp_reg")
+
+ef <- ef[, user_align_bin:=factor(user_align_bin, c("liberal", "conservative"), c("D", "R"))]
+ggplot(data = ef, aes(x=user_align_bin, y=fit*10000, color=user_align_bin)) +
+  facet_grid(. ~ site_cat + content_type) +
+  geom_pointrange(aes(ymin=lower*10000, ymax=upper*10000), size=1,
+                  position = position_dodge(width = 0.5)) + 
+  scale_color_manual(values=c("blue", "red"), name=NULL) +
+  scale_y_continuous(expand = c(0,0)) + #, limits = c(0,5.3), breaks = seq(0,6,1)) +
+  # scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
+  coord_cartesian(ylim = c(0,6)) + 
+  labs(x=NULL, y="Shares per 10,000 exp.") + 
+  theme(legend.position="none")
+```
