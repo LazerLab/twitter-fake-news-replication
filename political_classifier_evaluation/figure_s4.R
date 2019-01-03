@@ -4,7 +4,7 @@ source("util/plotting.R")
 theme_set(my_custom_theme())
 
 # Load in the annotation data, with an additional field for our labeling
-survey_data <- fread("political_classifier_evaluation/data/pol_classifier_eval_survey_res_20k.csv")
+survey_data <- fread("restricted_data/political_classifier_eval_data.csv")
 survey_min <- survey_data[!is.na(answer) & answer != "idk" ]
 survey_min[, answer_is_pol := answer %in% c("election","politics")]
 

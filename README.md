@@ -34,7 +34,7 @@ This folder contains code and data necessary to replicate Figure 1 in the paper.
 The script ```figure_1/gen_fig1_plus_supporting.R``` reproduces the results for Figures 1A, 1B, 1C, 1D in the main body, as well as the supporting material for Figure 1, in Figures S6, S7 and S8.
 
 ### Data
-The files ```figure_1b_data.csv```, ```figure_1c_data.csv```, and ```figure_1d_data.csv```, provide the data to recreate the ECDFs in Figure 1. ***Note that ```figure_1c_data.csv``` and ```figure_1d_data.csv``` contain individual-level data and can only be found in the restricted access release.*** Each file has 3 columns, a category column (what type of website is this line relevant to?), a ```percentage_of_total``` column (the x-axis of the plots) and a ```cumulative_total```, the y-axis of the plot.
+The files ```figure_1b_data.csv```, ```figure_1c_data.csv```, and ```figure_1d_data.csv```, provide the data to recreate the ECDFs in Figure 1. ***Note that these files contain individual-level data and can only be found in the restricted access release.*** Each file has 3 columns, a category column (what type of website is this line relevant to?), a ```percentage_of_total``` column (the x-axis of the plots) and a ```cumulative_total```, the y-axis of the plot.
 
 The files ```figure_1/data/daily_counts_exposures.csv```, ```figure_1/data/daily_counts_exposures_guess.csv```, and ```figure_1/data/daily_counts_shares.csv``` contain daily counts of fake news quantities for exposures, exposures according to the list from Guess et al., and shares, respectively.  Columns in each file are as follows:
 
@@ -76,12 +76,11 @@ pval - the p-value of the observed edge under the null
 significance - the significance of the edge (the negative logarithm of the p-value)
 ```
 
-The file ```coexposure_network/data/site_map.tsv``` just cleans up some of the sitenames. The file ```total_exposure_counts.csv``` gives the total number of exposures for each domain, and is just used for sizing for Figure 7.
+The file ```coexposure_network/data/site_map.tsv``` just cleans up some of the sitenames. The file ```coexposure_network/data/total_exposure_counts.csv``` gives the total number of exposures for each domain, and is just used for sizing for Figure 7.
 
-There are two files used in the script that are not available in this public data release:
+The file ```restricted_data/fb_top500_domain_affl.csv``` is taken from the Bakshy et al. Facebook study, and is available only in the restricted release.  Note that you can still generate network plots without this file. 
 
--  ```coexposure_network/data/user_to_domain_network.csv``` links an anonymized user ID (```panel_uid```) to a website (```website```) and gives the number of times the user was exposed to that website.  However, as it is individual level data, we do not share it here.
-- ```coexposure_network/data/fb_top500_domain_affl.csv``` is taken from the Bakshy et al. Facebook study, and must be requested from those authors. 
+Additionally, note that with restricted access, you can construct the coexposure network from raw exposure data, but the results will be slightly different due to k-anonymization.  Refer to ```coexposure_network/analysis.R``` for details.
 
 
 ## ```compare_to_pew```
@@ -95,11 +94,9 @@ The script ```compare_to_pew/analyze_representativeness_pew.R``` generates Figur
 
 There are two files used in the script that are not available in this public data release:
 
-- ```compare_to_pew/data/pew_stats.csv``` contains data drawn directly from [PEW's 2016 Social Media update survey](http://www.pewinternet.org/dataset/march-2016-libraries/).  You will need to register for and then download the CSV release for this survey, and then rename it to ```pew_stats.csv```.
+- ```restricted_data/pew_stats.csv``` contains data drawn directly from [PEW's 2016 Social Media update survey](http://www.pewinternet.org/dataset/march-2016-libraries/).
 
-- ```compare_to_pew/data/panel_stats.csv``` contains information on panel members party, sex, race_ethnicity, and age (anonymized). ***This file is contained only in the restricted release***.
-
-
+- ```restricted_data/panel.tsv``` contains information on panel members (anonymized).
 
 
 ## ```political_classifier_evaluation```
@@ -113,16 +110,14 @@ The script ```political_classifier_evaluation/figure_s4.R``` generates Figure S4
 
 ***This file is only available under the restricted data release***. 
 
-The file ```political_classifier_evaluation/pol_classifier_eval_survey_res_20k.csv``` gives results of the annotation task, and has the following columns:
+The file ```restricted_data/political_classifier_eval_data.csv``` gives results of the annotation task, and has the following columns:
 
 ```
-tweet_date - (twitter formatted)
-from_file - ignore, this is for our records to remember what raw data file its from
+tweet_date - Twitter formatted, time removed
 election - number of MTurk annotators giving "U.S. Election" as the answer
 idk - N Turkers giving "I don't know"
 other - N Turkers giving "Something else"
 politics - N Turkers giving "U.S. politics in general
-raw_text  - the text shown to annotators. Note that this includes the text of quoted tweets and translations
 answer - the final answer. This is a majority vote of turkers in most cases, if there was no agreement, its the decision of someone on our Northeastern team.
 is_pol - Did the classifier say it was about politics?
 ```

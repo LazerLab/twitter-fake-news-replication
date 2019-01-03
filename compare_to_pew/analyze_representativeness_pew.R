@@ -1,13 +1,16 @@
 library(survey)
 library(binom)
+library(plyr)
 library(dplyr)
-library(survey)
+library(data.table)
+library(ggplot2)
+source("util/plotting.R")
 
 ######## Contained in restricted release***********
-panel <- fread("compare_to_pew/data/panel_stats.csv")
+panel <- fread("restricted_data/panel.tsv")
 ######################################
 
-pew_data <- fread("compare_to_pew/data/pew_stats.csv")
+pew_data <- fread("restricted_data/pew_stats.csv")
 #Is Internet User
 pew_data[ , is_internet_user := eminuse == 1 | intmob == 1]
 
@@ -57,6 +60,7 @@ make_confint_table <- function(x){
 
 gen_pew_table <- function(factor_var,data_subset){
   pew <- data.frame(svymean(as.formula(paste0("~",factor_var)),data_subset, method="logit"))
+  setnames(pew, c("mean","SE"))
   pew$name <- sub(factor_var,"",rownames(pew))
   pew$upper <- pew$mean + 2*pew$SE
   pew$lower <- pew$mean - 2*pew$SE

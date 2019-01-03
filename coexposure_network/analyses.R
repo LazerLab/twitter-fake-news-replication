@@ -15,7 +15,7 @@ yellow_sites <- c("addictinginfo.org", "awm.com", "blakkpepper.com", "breitbart.
                   "thesun.co.uk", "tmz.com")
 
 # find all the political news/blog websites
-nonfake_anno <- fread("util/domain_lists/nonfake_annotated.tsv", showProgress = F)
+nonfake_anno <- fread("util/domain_lists/nonfake_annotated_2.csv", showProgress = F)
 sites <- c(yellow_sites,
            nonfake_anno[website_cat %in% c("news/blog")]$website,
            domains_colored[domain_color != "Satire"]$domain)
@@ -27,14 +27,35 @@ clean_sitenames <- fread("coexposure_network/data/site_map.tsv")
 ######################################################################################
 ######################################################################################
 #### ********** USE THE CODE BELOW IF YOU HAVE ACCESS TO THE RESTRICTED DATA******####
-# This is where the file user_to_domain_network.csv is located #####
-# Otherwise Skip to line 96 to read in the public site-site connections
+#### ********** Please also note that due to K-anonymization of the data, the results******####
+#### ********** if you use this code will be slightly different - some sites in the final ******####
+#### ********** network in the paper are removed.  We are retaining this code to ******####
+#### ********** show the full construction of hte network, but please skip to ******####
+#### ********** line 96 if you would like to exactly replicate the paper using ******####
+#### ********** aggregate (full) data ******####
 ######################################################################################
 ######################################################################################
 ######################################################################################
 
+source("util/load_exp_data.R", chdir = T)
+# subset exposures to this set of websites
+exposure_sites <- urls_exp[website %in% sites]
+exposure_sites[, website := mapvalues(website,clean_sitenames$from,clean_sitenames$to)]
+
+########################################################################################################
+#######Construct the co-exposure network network##########
+########################################################################################################
+
+# how many sites are actually in the data?
+length(unique(exposure_sites$website))
+
+# how many of all exposures are we capturing?
+nrow(exposure_sites)/nrow(urls_exp[!website %in% c("twitter.com","amp.twimg.com")])
+
+# N exposures of each website to each panel member
+uid_domain_net <- exposure_sites[,.N,by=.(panel_uid,website)]
+
 # Raw data - N exposures of each website to each panel member
-uid_domain_net <- fread("coexposure_network/data/user_to_domain_network.csv")
 uid_to_consider <- unique(uid_domain_net$panel_uid)
 
 # user counts per website
@@ -212,7 +233,7 @@ setnames(clust_df, "site","domain")
 ### As noted in the readme, this file must be obtain from the authors of Bakshy et al.
 ######################################################################################
 ######################################################################################
-fb_dat <- fread("coexposure_network/data/fb_top500_domain_affl.csv")
+fb_dat <- fread("restricted_data/fb_top500_domain_affl.csv")
 fb_dat <- merge(clust_df, by="domain",fb_dat, all.x=T)
 fb_dat <- merge(fb_dat, domains_colored, all.x=T)
 ggplot(fb_dat, 

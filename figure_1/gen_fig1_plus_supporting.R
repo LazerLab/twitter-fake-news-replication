@@ -28,13 +28,13 @@ plot_ecdf <- function(data_filename, out_of_k, x_lab, y_lab){
 n_nonbot_panel <- 16442
 
 # Figure 1b - site exposures ecdf
-p <- plot_ecdf("figure_1/data/figure_1b_data.csv", n_nonbot_panel, "Websites", "Exposures")
+p <- plot_ecdf("restricted_data/figure_1b_data.csv", n_nonbot_panel, "Websites", "Exposures")
 ggsave("figure_1/img/figure_1b.pdf",p,h=6,w=7)
 # Figure 1c - panel_share_nobot_ecdf
-p <- plot_ecdf("figure_1/data/figure_1c_data.csv", n_nonbot_panel, "Panel Members", "Shares")
+p <- plot_ecdf("restricted_data/figure_1c_data.csv", n_nonbot_panel, "Panel Members", "Shares")
 ggsave("figure_1/img/figure_1c.pdf",p,h=6,w=7)
 # Figure 1d - panel_exp_nobot_ecdf
-p <- plot_ecdf("figure_1/data/figure_1d_data.csv", n_nonbot_panel, "Panel Members", "Exposures")
+p <- plot_ecdf("restricted_data/figure_1d_data.csv", n_nonbot_panel, "Panel Members", "Exposures")
 ggsave("figure_1/img/figure_1d.pdf",p,h=6,w=7)
 
 
