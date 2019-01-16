@@ -121,3 +121,20 @@ politics - N Turkers giving "U.S. politics in general
 answer - the final answer. This is a majority vote of turkers in most cases, if there was no agreement, its the decision of someone on our Northeastern team.
 is_pol - Did the classifier say it was about politics?
 ```
+
+## ```panel_accounts/profile_validation``` and ```panel_accounts/outlier_validation```
+
+Code and results for Section S.8. Private data is not currently available.
+
+### Code
+- ```panel_accounts/profile_validation``` demonstrates how we selected 200 matched accounts for annotation. The analysis of annotations takes place in ```03-eval-with-annots.R```, and 
+its output is in ```results/03-out.txt```.
+- ```panel_accounts/outlier_validation/accountsToInspect.R``` demonstrates how we selected the 23 outlier accounts and 15 bot-like accounts for manual inspection.
+
+## ```panel_accounts/super_people_analyses```
+
+Code for Figure 2. Private data is not currently available.
+
+### Code
+The script ```panel_accounts/super_people_analyses/generate_superspreaders_figure.R``` generates Figure 2 under ```img/bar.pdf``` and ```img/bar_exp.pdf```
+
