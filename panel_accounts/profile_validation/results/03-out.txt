@@ -1,0 +1,66 @@
+[1] "Have Twitter profile data for 489 panel members"
+[1] "In profile data, num where name field contains voter's first name: 453 or 0.926380368098159"
+[1] "Num where name field contains voter's last name: 402 or 0.822085889570552"
+[1] "Num with both first & last: 390 or 0.797546012269939"
+[1] "Num where location contains voter's city: 212 or 0.433537832310838"
+[1] "Num where location contains voter's state abbrev: 258 or 0.52760736196319"
+[1] "Num where location contains voter's state: 129 or 0.263803680981595"
+[1] "putting that together..."
+[1] "Num with first and/OR last name: 465 or 0.950920245398773"
+[1] "Num with city, state and/OR state abbrev: 413 or 0.844580777096115"
+[1] "We annotated 200 profiles"
+[1] "Both annotators agreed there was a valid photo in 131 cases and there wasn't in 58 cases"
+[1] "(They disagreed in 11 cases, which we ignore)"
+[1] "Among those 131 annotated profiles..."
+[1] "Gender: both annotators agreed 131 times."
+[1] "Age: Krippendorff's alpha between annotators"
+ Krippendorff's alpha
+
+ Subjects = 131 
+   Raters = 2 
+    alpha = 0.74 
+[1] "Age: annotator avg vs. voter data. Pearson correlation is:"
+               averageAge age_start_2018
+averageAge      1.0000000      0.7315793
+age_start_2018  0.7315793      1.0000000
+[1] "Age: annotator avg vs. voter data. Krippendorff's alpha:"
+ Krippendorff's alpha
+
+ Subjects = 131 
+   Raters = 2 
+    alpha = 0.618 
+[1] "Here's the distribution of the diffs between annotation and truth:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-14.500  -1.750   3.000   4.191   8.250  36.500 
+[1] "Number of times we were off by > 10 years: 29 ; by > 15 years: 12 ; by > 20 years: 7"
+[1] "or as fractions: we were off by <= 5 years: 0.541984732824427 ; by <= 10 years: 0.778625954198473 ; by <= 15 years: 0.908396946564885 ; by <= 20 years: 0.946564885496183"
+[1] "People younger than 50 == 0.801526717557252 of the sample"
+[1] "for people aged <=50: we were off by <= 5 years: 0.619047619047619 ; by <= 10 years: 0.876190476190476 ; by <= 15 years: 0.971428571428571 ; by <= 20 years: 1"
+[1] "for people aged >50: we were off by <= 5 years: 0.230769230769231 ; by <= 10 years: 0.384615384615385 ; by <= 15 years: 0.653846153846154 ; by <= 20 years: 0.730769230769231"
+[1] "Ethnicity: both annotators agreed 120 times. Krippendorff's alpha is:"
+ Krippendorff's alpha
+
+ Subjects = 131 
+   Raters = 2 
+    alpha = 0.671 
+[1] "Ethnicity: looking only at the 120 cases where annotators agree, compare their judgements to the voter data. 110 match. Krippendorff's alpha:"
+ Krippendorff's alpha
+
+ Subjects = 120 
+   Raters = 2 
+    alpha = 0.621 
+[1] "If we collapse the categories Hispanic and White... repeating the above"
+[1] "Ethnicity: both annotators agreed 126 times. Krippendorff's alpha is:"
+ Krippendorff's alpha
+
+ Subjects = 131 
+   Raters = 2 
+    alpha = 0.823 
+[1] "Ethnicity: looking only at the 126 cases where annotators agree, compare their judgements to the voter data. 119 match. Krippendorff's alpha:"
+ Krippendorff's alpha
+
+ Subjects = 126 
+   Raters = 2 
+    alpha = 0.706 
+[1] "plain fraction that match: 0.944444444444444"
+
