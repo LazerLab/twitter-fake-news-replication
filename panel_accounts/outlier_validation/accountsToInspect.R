@@ -73,15 +73,24 @@ printTopOverallAndTopBots = function(dataDir) {
   print("Bots in top 1% for overall sharing or exposure")
   minForOvExp = tail(overall_exp_by_person, 1)$total_exposures
   minForOvSh = tail(overall_shares_by_person, 1)$total_shares
-  print(panelWBots[is_bot==T & (total_exposures >= minForOvExp | total_shares >= minForOvSh), .(user_id, twProfileHandle, total_exposures, total_shares)][order(-total_exposures),])
+  if ("twProfileHandle" %in% colnames(panelWBots)) {
+	  print(panelWBots[is_bot==T & (total_exposures >= minForOvExp | total_shares >= minForOvSh), .(user_id, twProfileHandle, total_exposures, total_shares)][order(-total_exposures),])
+  } else {
+	  print(panelWBots[is_bot==T & (total_exposures >= minForOvExp | total_shares >= minForOvSh), .(user_id, total_exposures, total_shares)][order(-total_exposures),])
+  }
+
   
   # 4. Bots in set responsible for 80% of fake shares and exposures
   print("Bots in set responsible for 80% of fake shares and exposures")
   minForFakeExp = tail(fake_exp_by_person, 1)$n_exp  
   minForFakeSh = tail(fake_shares_by_person, 1)$n_share  
-  print(panelWBots[is_bot==T & (n_exp >= minForFakeExp | n_share >= minForFakeSh), .(user_id, twProfileHandle, n_exp, n_share)][order(-n_exp),])
+  if ("twProfileHandle" %in% colnames(panelWBots)) {
+	  print(panelWBots[is_bot==T & (n_exp >= minForFakeExp | n_share >= minForFakeSh), .(user_id, twProfileHandle, n_exp, n_share)][order(-n_exp),])
+  } else {
+	  print(panelWBots[is_bot==T & (n_exp >= minForFakeExp | n_share >= minForFakeSh), .(user_id, n_exp, n_share)][order(-n_exp),])
+  }
   return()
 }
 
 # code is run here:
-printAccountsToInspect("private_data")
+printAccountsToInspect("restricted_data")
