@@ -5,7 +5,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(data.table, Hmisc)
 
 ntrials = 200   # CIs are plenty small this way
-urls_panel = readRDS("private_data/urls_panel.rds")
+source("util/load_exp_data.R", chdir=T)		# loads urls_panel as one of the vars
 urls_panel = urls_panel[is_bot==F & is_compromised==F,]
 urls_panel[, is_fn := domain_color %in% c("Black", "Red", "Orange")]
 # the relevant columns are: user_id, ts_rel_days, and is_fn. Each row is a URL share.

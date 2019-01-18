@@ -138,3 +138,10 @@ Code for Figure 2. Private data is not currently available.
 ### Code
 The script ```panel_accounts/super_people_analyses/generate_superspreaders_figure.R``` generates Figure 2 under ```img/bar.pdf``` and ```img/bar_exp.pdf```
 
+## ```analyses/capping_simulation```
+
+Code for generating Figure S14. Requires ```restricted_data``` for its files ```panel.tsv``` and ```urls.tsv.gz```.
+
+-```cappingSimData.R``` generates the data files ```capping_preserved2.csv``` and ```origSums.Rdata``` (included here).
+-```cappingPlot.R``` uses those files to create the plot ```img/cappingSim4.pdf``` (included here).
+
