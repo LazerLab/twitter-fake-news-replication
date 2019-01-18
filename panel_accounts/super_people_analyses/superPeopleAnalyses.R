@@ -1,3 +1,8 @@
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(data.table, bit64)
+
+source("util/panel_util.R")	# for getPanelData() and rankPeopleByX()
+
 prepDataAndDoAnalyses = function(dataDir, figsDir, justReturnGroups = F) {
   panel = getPanelData(dataDir, withTrolls = F, withBots = F, useOrigBotScores = F)
   setkey(panel, user_id)

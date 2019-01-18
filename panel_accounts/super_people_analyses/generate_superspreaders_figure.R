@@ -10,7 +10,7 @@ source("util/panel_util.R")				# for getPanelData
 source("panel_accounts/super_people_analyses/superPeopleAnalyses.R")	# for prepDataAndDoAnalyses
 
 prep_panel = function(multiplyExpBy10 = T) {
-  panel = getPanelData(dataDir="private_data", F, F)
+  panel = getPanelData(dataDir="restricted_data", F, F)
   if (multiplyExpBy10) {
     expColNames = c("total_exposures", "n_exp", "n_black_exp", "n_red_exp", "n_orange_exp")
     for (colN in expColNames) {
@@ -25,7 +25,7 @@ prep_panel = function(multiplyExpBy10 = T) {
                                 labels = c("extreme left", "left", "center", "right", "extreme right"))]
   
   # merge in superspreader labels
-  d <- prepDataAndDoAnalyses(dataDir="private_data", figsDir=NULL, justReturnGroups = T)
+  d <- prepDataAndDoAnalyses(dataDir="restricted_data", figsDir=NULL, justReturnGroups = T)
   
   superlabels <- data.table(rbind(d[[1]],d[[2]],d[[3]],d[[4]]),
                    supergroup=c(rep.int("ssFake",nrow(d[[1]])),
