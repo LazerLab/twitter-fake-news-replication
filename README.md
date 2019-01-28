@@ -14,7 +14,7 @@ For each subfolder, the expectation is that the code is run from the top level d
 
 The only exception to this is the ```util``` directory, which contains code utilities leveraged throughout our analyses.
 
-## ```domain_coding```
+## ```domains/domain_coding```
 
 This directory contains data files only that describe our labeling of websites.  The directory contains three files:
 
@@ -83,28 +83,13 @@ The file ```restricted_data/fb_top500_domain_affl.csv``` is taken from the Baksh
 Additionally, note that with restricted access, you can construct the coexposure network from raw exposure data, but the results will be slightly different due to k-anonymization.  Refer to ```coexposure_network/analysis.R``` for details.
 
 
-## ```compare_to_pew```
 
-Code and data to replicate Figure S1.
-
-### Code
-The script ```compare_to_pew/analyze_representativeness_pew.R``` generates Figure S1 from the supplementary.
-
-### Data
-
-There are two files used in the script that are not available in this public data release:
-
-- ```restricted_data/pew_stats.csv``` contains data drawn directly from [PEW's 2016 Social Media update survey](http://www.pewinternet.org/dataset/march-2016-libraries/).
-
-- ```restricted_data/panel.tsv``` contains information on panel members (anonymized).
-
-
-## ```political_classifier_evaluation```
+## ```political_urls/political_classifier_evaluation```
 
 Code and data to replicate Figure S4 in the paper.
 
 ### Code
-The script ```political_classifier_evaluation/figure_s4.R``` generates Figure S4, for the political classifier evaluation.
+The script ```political_urls/political_classifier_evaluation/figure_s4.R``` generates Figure S4, for the political classifier evaluation.
 
 ### Data
 
@@ -121,22 +106,46 @@ politics - N Turkers giving "U.S. politics in general
 answer - the final answer. This is a majority vote of turkers in most cases, if there was no agreement, its the decision of someone on our Northeastern team.
 is_pol - Did the classifier say it was about politics?
 ```
+## ```panel_accounts/compare_to_pew```
 
-## ```panel_accounts/profile_validation``` and ```panel_accounts/outlier_validation```
-
-Code and results for Section S.8. Private data is not currently available.
+Code and data to replicate Figure S1.
 
 ### Code
-- ```panel_accounts/profile_validation``` demonstrates how we selected 200 matched accounts for annotation. The analysis of annotations takes place in ```03-eval-with-annots.R```, and 
-its output is in ```results/03-out.txt```.
-- ```panel_accounts/outlier_validation/accountsToInspect.R``` demonstrates how we selected the 23 outlier accounts and 15 bot-like accounts for manual inspection.
+The script ```panel_accounts/compare_to_pew/analyze_representativeness_pew.R``` generates Figure S1 from the supplementary.
+
+### Data
+
+There are two files used in the script that are not available in this public data release:
+
+- ```restricted_data/pew_stats.csv``` contains data drawn directly from [PEW's 2016 Social Media update survey](http://www.pewinternet.org/dataset/march-2016-libraries/).
+
+- ```restricted_data/panel.tsv``` contains information on panel members (anonymized).
 
 ## ```panel_accounts/super_people_analyses```
 
-Code for Figure 2. Private data is not currently available.
+Code for Figure 2 and Section S.9. 
 
 ### Code
-The script ```panel_accounts/super_people_analyses/generate_superspreaders_figure.R``` generates Figure 2 under ```img/bar.pdf``` and ```img/bar_exp.pdf```
+- ```panel_accounts/super_people_analyses/generate_superspreaders_figure.R``` generates Figure 2 under ```img/bar.pdf``` and ```img/bar_exp.pdf```
+- `panel_accounts/super_people_analyses/superPeopleAnalyses.R` generates data for Table S3. Its output is included here in `superPeopleAnalyses-out.txt`.
+
+### Data
+Both scripts rely on  `panel_with_counts.tsv` from the `restricted_data`.
+
+## ```panel_accounts/profile_validation``` and ```panel_accounts/outlier_validation```
+
+Code and results for Section S.8. 
+
+### Code
+- ```panel_accounts/outlier_validation/accountsToInspect.R``` demonstrates how we selected the 23 outlier accounts and 15 bot-like accounts for manual inspection.
+- ```panel_accounts/profile_validation``` demonstrates how we selected 200 matched accounts for annotation. The analysis of annotations takes place in ```03-eval-with-annots.R```, and 
+its output is in ```results/03-out.txt```.
+
+### Data
+- `panel_accounts/outlier_validation` uses `restricted_data/panel_with_counts.tsv`.
+-`panel_accounts/profile_validation` uses individual-level data that is not being released.
+
+
 
 ## ```analyses/capping_simulation```
 

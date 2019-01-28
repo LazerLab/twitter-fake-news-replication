@@ -36,7 +36,7 @@ rankPeopleByX = function(panelSlice, colname, numPeopleWanted = NULL, withCumPer
 	return(rank_table[1:numPeopleWanted,])
 }
 
-# documents where some of the variables in restricted_data/panel.tsv come from
+# documents where some of the variables in restricted_data/panel_with_counts.tsv come from
 addPanelVarsFromURLs = function() {
 	# some of this is from load_exp_data.R
 	urls <- fread("gunzip -c restricted_data/urls.tsv.gz")

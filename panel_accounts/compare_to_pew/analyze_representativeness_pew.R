@@ -97,7 +97,7 @@ plt <- ggplot(dat, aes(name,mean,ymin=lower,ymax=upper,color=Data))
 plt <- plt + geom_pointrange(position=position_dodge(.5),size=1.) + coord_flip()
 plt <- plt + scale_y_continuous("Estimated Percent",labels=percent,limits=c(0,1))
 plt <- plt + my_custom_theme() +xlab("Demographic Characteristic")
-ggsave(plt,file="compare_to_pew/img/pew_rep.pdf",h=6,w=7)
+ggsave(plt,file="img/pew_rep.pdf",h=6,w=7)
 
 # Age
 smean.cl.boot(panel$age)

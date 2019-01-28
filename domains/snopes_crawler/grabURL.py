@@ -4,81 +4,9 @@ from lxml.cssselect import CSSSelector
 import re
 
 
-def getTitleFromURL(url):
-    r = requests.get(url, timeout=5)
-
-    if r.status_code == requests.codes.ok:
-        doc = lxml.html.fromstring(r.text)
-        h = doc.head.cssselect('title')[0]
-        return h.text
-    else:
-        return ''
-
-def getTitleAndFinalURL(url):
-    r = requests.get(url, timeout=5)
-
-    if r.status_code == requests.codes.ok:
-        try:
-            doc = lxml.html.fromstring(r.text)
-            h = doc.head.cssselect('title')[0]
-            title = h.text
-        except:
-            title = ''
-    else:
-        title = ''
-
-    return(title, r.url)
 
 
-# Using Nir's code to get more elements from the html
-# Returns a dictionary with lots of keys, as many values filled in as possible.
-# If there's an error reaching the page or parsing the html, dictionary only has "url" field instead.
-def getURLAndMetadata(url):
-    row = {}
-
-    r = requests.get(url, timeout=5)    # NB: without timeout flag, this can hang indefinitely
-
-    if r.status_code != requests.codes.ok:
-        return {'url': r.url, 'error': "HTTP status " + str(r.status_code)}
-
-    try:
-        doc = lxml.html.fromstring(r.text)
-    except Exception as e:
-        return {'url': r.url, 'error': e.__class__.__name__ + ":" + str(e.message)}
-
-    bad_chars = re.compile('[\r\n\t]+')
-    website_pattern = re.compile('https?://([^/]+)')
-
-    # for each key in meta_selectors, try to get a value for it by trying all its css selectors in order
-    for prop, sels in prop2selectors.iteritems():
-        val = u''
-        for sel in sels:
-            elems = sel(doc)
-            if len(elems) < 1:
-                continue
-            if prop=='pagination' and sel2value_attr[sel] is None:
-                val = 'pagination_elem_found'
-            elif prop=='title' and sel2value_attr[sel] is None:
-                # changes bad characters to spaces; assumes input is unicode(?), and changes it to utf-8
-                val = unicode(','.join([bad_chars.sub(' ', lxml.html.tostring(elem, method='text', encoding='unicode')).strip() for elem in elems])).encode("utf-8")
-            else:
-                val_attr = sel2value_attr[sel]
-                # val = unicode(','.join([bad_chars.sub(' ', elem.attrib[val_attr]).strip() for elem in elems])).encode("utf-8")
-                tmp_array = []
-                for elem in elems:
-                    if elem.attrib.has_key(val_attr):
-                        tmp_array.append(bad_chars.sub(' ', elem.attrib[val_attr]).strip())
-                val = unicode(','.join(tmp_array)).encode("utf-8")
-            break
-        row[prop] = val
-
-    # If canonical url is blank or malformed, fall back to the one we have
-    if len(row['canonical_url']) == 0 or (not website_pattern.match(row['canonical_url'])):
-        row['canonical_url'] = r.url
-
-    return row
-
-# This version traps and handles the three types of errors seen (empirically) above:
+# This version traps and handles the three types of errors seen (empirically):
 # 1. Error reaching final page (malformed website; HTTP errors in any of the redirects or at the final page)
 # 2. Error downloading page content or determining encoding (certain large non-html files take up ridiculous amounts
 # of time and memory when r.text is called)
@@ -136,13 +64,8 @@ def safeGetURLAndMetadata(url, turnOffSSL = False, skipFirstCanonical = False, f
             row['error'] = "HTTP status " + str(r.status_code)
             return row
 
-        # This is the moment some URLs provoke large time & memory use.
-        # Kill it after 10 sec.
-        # page_content = timeout(requests.Response.text.__get__, args=[r], timeout_duration=10, throw_exception=True)
-        # Also possible to get an encoding error. (Could try to work around that by using beautiful soup's encoding
-        # detector, but on the other hand, lxml uses its own.)
-
-        # Switch to calling r.content instead of r.text. This lets lxml be the one to take on the encoding challenge.
+        # This is the moment some URLs provoke large time & memory use.  Kill it after 10 sec.
+        # Call r.content instead of r.text. This lets lxml be the one to take on the encoding challenge.
         page_content = timeout(requests.Response.content.__get__, args=[r], timeout_duration=10, throw_exception=True)
 
         if len(page_content) == 0:
@@ -162,8 +85,6 @@ def safeGetURLAndMetadata(url, turnOffSSL = False, skipFirstCanonical = False, f
         return row
 
     # If that all worked, we're almost home free
-    # bad_chars = re.compile('[\r\n\t]+')
-    # website_pattern = re.compile('https?://([^/]+)')
 
     # for each key in meta_selectors, try to get a value for it by trying all its css selectors in order
     for prop, sels in prop2selectors.iteritems():
@@ -280,38 +201,3 @@ if __name__ == "__main__":
     print safeGetURLAndMetadata("https://t.co/MkGU2eE56T")
 
 
-# scratch -- code from testing things
-
-# lxml more complicated way
-# from lxml import etree
-# from io import StringIO, BytesIO
-
-#parser = etree.HTMLParser()
-#r = requests.get("https://t.co/9MXw9nuYgO")
-# tree = etree.parse(StringIO(r.text), parser)
-
-# unfortunately, this didn't prevent iter.content().generate from going into that clause where it tries to
-# download the whole stream at the [later] point that r.text was called.
-# try this new way, to avoid timing out while streaming.
-# r = requests.get(url, timeout=5, stream=True)
-# Use "with" syntax so that it automatically closes when we're done with the loop.
-# from contextlib import closing
-# with closing(requests.get(url, timeout=5, stream=True)) as r:
-#     # In this case, r.content hasn't been retrieved yet, which is good, because we need to manually limit the amount.
-#     # Set r.content ourself, by mimicking the code from the property in api.py
-#     if r._content is False:
-#         # Read the contents.
-#         if r._content_consumed:
-#             raise RuntimeError(
-#                 'The content for this response was already consumed')
-#
-#         if r.status_code == 0 or r.raw is None:
-#             r._content = None
-#         else:
-#             # Amount in bytes: so, limit of 50 MB had better well cover anything we'd actually want.
-#             for chunk in r.iter_content(1024 * 1024 * 50, decode_unicode=False):
-#                 # act like we're going to iterate, but stop after the first chunk
-#                 r._content = bytes().join(chunk) or bytes()
-#                 break
-#
-#     r._content_consumed = True
