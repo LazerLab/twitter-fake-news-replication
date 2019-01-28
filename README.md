@@ -132,7 +132,7 @@ Code for Figure 2 and Section S.9.
 ### Data
 Both scripts rely on  `panel_with_counts.tsv` from the restricted data release.
 
-## `panel_accounts/`: `profile_validation` and `panel_accounts/outlier_validation`
+## `panel_accounts/`: `profile_validation` and `outlier_validation`
 
 Code and results for Section S.8. 
 
