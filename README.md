@@ -126,13 +126,13 @@ There are two files used in the script that are not available in this public dat
 Code for Figure 2 and Section S.9. 
 
 ### Code
-- ```panel_accounts/super_people_analyses/generate_superspreaders_figure.R``` generates Figure 2 under ```img/bar.pdf``` and ```img/bar_exp.pdf```
-- `panel_accounts/super_people_analyses/superPeopleAnalyses.R` generates data for Table S3. Its output is included here in `superPeopleAnalyses-out.txt`.
+- `generate_superspreaders_figure.R` generates Figure 2 under `img/bar.pdf` and `img/bar_exp.pdf`
+- `superPeopleAnalyses.R` generates data for Table S3. Its output is included here in `superPeopleAnalyses-out.txt`.
 
 ### Data
-Both scripts rely on  `panel_with_counts.tsv` from the `restricted_data`.
+Both scripts rely on  `panel_with_counts.tsv` from the restricted data release.
 
-## ```panel_accounts/profile_validation``` and ```panel_accounts/outlier_validation```
+## `panel_accounts/`: `profile_validation` and `panel_accounts/outlier_validation`
 
 Code and results for Section S.8. 
 
@@ -143,7 +143,7 @@ its output is in ```results/03-out.txt```.
 
 ### Data
 - `panel_accounts/outlier_validation` uses `restricted_data/panel_with_counts.tsv`.
--`panel_accounts/profile_validation` uses individual-level data that is not being released.
+- `panel_accounts/profile_validation` uses individual-level data that is not being released.
 
 
 
@@ -151,6 +151,6 @@ its output is in ```results/03-out.txt```.
 
 Code for generating Figure S14. Requires ```restricted_data``` for its files ```panel.tsv``` and ```urls.tsv.gz```.
 
--```cappingSimData.R``` generates the data files ```capping_preserved2.csv``` and ```origSums.Rdata``` (included here).
--```cappingPlot.R``` uses those files to create the plot ```img/cappingSim4.pdf``` (included here).
+- ```cappingSimData.R``` generates the data files ```capping_preserved2.csv``` and ```origSums.Rdata``` (included here).
+- ```cappingPlot.R``` uses those files to create the plot ```img/cappingSim4.pdf``` (included here).
 
