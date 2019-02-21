@@ -27,8 +27,8 @@ printTopFakeAccounts = function(dataDir, fixingBotsAndTrolls = F) {
     panel = getPanelData(dataDir, withTrolls = T, withBots = T, useOrigBotScores = T)
   }
   
-  fake_shares_by_person = rankPeopleByX(panel, "n_share", withCumPerc = T)
-  fake_exp_by_person = rankPeopleByX(panel, "n_exp", withCumPerc = T)
+  fake_shares_by_person = rankPeopleByX(panel, "n_fn_shares", withCumPerc = T)
+  fake_exp_by_person = rankPeopleByX(panel, "n_fn_exp", withCumPerc = T)
   # restrict to those responsible for top 80% of fake content
   fake_shares_by_person = fake_shares_by_person[cumperc <= .8,]
   fake_exp_by_person = fake_exp_by_person[cumperc <= .8,]
@@ -48,11 +48,11 @@ printTopOverallAndTopBots = function(dataDir) {
   panel = getPanelData(dataDir, withTrolls = F, withBots = F, useOrigBotScores = T)
 
   # We already have columns listing who's super (overall), but need the actual ranking tables. These tables cover those people only.
-  overall_exp_by_person = rankPeopleByX(panel[is_superconsumer == T,], "total_exposures")  # is_superconsumer already defined top 1%
-  overall_shares_by_person = rankPeopleByX(panel[is_supersharer == T,], "total_shares") # is_supersharer already defined top 1%
+  overall_exp_by_person = rankPeopleByX(panel[is_superconsumer == T,], "n_pol_exp")  # is_superconsumer already defined top 1%
+  overall_shares_by_person = rankPeopleByX(panel[is_supersharer == T,], "n_pol_shares") # is_supersharer already defined top 1%
   
-  fake_shares_by_person = rankPeopleByX(panel, "n_share", withCumPerc = T)
-  fake_exp_by_person = rankPeopleByX(panel, "n_exp", withCumPerc = T)
+  fake_shares_by_person = rankPeopleByX(panel, "n_fn_shares", withCumPerc = T)
+  fake_exp_by_person = rankPeopleByX(panel, "n_fn_exp", withCumPerc = T)
   # restrict to those responsible for top 80% of fake content
   fake_shares_by_person = fake_shares_by_person[cumperc <= .8,]
   fake_exp_by_person = fake_exp_by_person[cumperc <= .8,]
@@ -71,23 +71,23 @@ printTopOverallAndTopBots = function(dataDir) {
   # 3. Bots in top 1% for overall sharing or exposure
   panelWBots = getPanelData(dataDir, withTrolls = F, withBots = T, useOrigBotScores = T)
   print("Bots in top 1% for overall sharing or exposure")
-  minForOvExp = tail(overall_exp_by_person, 1)$total_exposures
-  minForOvSh = tail(overall_shares_by_person, 1)$total_shares
+  minForOvExp = tail(overall_exp_by_person, 1)$n_pol_exp
+  minForOvSh = tail(overall_shares_by_person, 1)$n_pol_shares
   if ("twProfileHandle" %in% colnames(panelWBots)) {
-	  print(panelWBots[is_bot==T & (total_exposures >= minForOvExp | total_shares >= minForOvSh), .(user_id, twProfileHandle, total_exposures, total_shares)][order(-total_exposures),])
+	  print(panelWBots[is_bot==T & (n_pol_exp >= minForOvExp | n_pol_shares >= minForOvSh), .(user_id, twProfileHandle, n_pol_exp, n_pol_shares)][order(-n_pol_exp),])
   } else {
-	  print(panelWBots[is_bot==T & (total_exposures >= minForOvExp | total_shares >= minForOvSh), .(user_id, total_exposures, total_shares)][order(-total_exposures),])
+	  print(panelWBots[is_bot==T & (n_pol_exp >= minForOvExp | n_pol_shares >= minForOvSh), .(user_id, n_pol_exp, n_pol_shares)][order(-n_pol_exp),])
   }
 
   
   # 4. Bots in set responsible for 80% of fake shares and exposures
   print("Bots in set responsible for 80% of fake shares and exposures")
-  minForFakeExp = tail(fake_exp_by_person, 1)$n_exp  
-  minForFakeSh = tail(fake_shares_by_person, 1)$n_share  
+  minForFakeExp = tail(fake_exp_by_person, 1)$n_fn_exp  
+  minForFakeSh = tail(fake_shares_by_person, 1)$n_fn_shares
   if ("twProfileHandle" %in% colnames(panelWBots)) {
-	  print(panelWBots[is_bot==T & (n_exp >= minForFakeExp | n_share >= minForFakeSh), .(user_id, twProfileHandle, n_exp, n_share)][order(-n_exp),])
+	  print(panelWBots[is_bot==T & (n_fn_exp >= minForFakeExp | n_fn_shares >= minForFakeSh), .(user_id, twProfileHandle, n_fn_exp, n_fn_shares)][order(-n_fn_exp),])
   } else {
-	  print(panelWBots[is_bot==T & (n_exp >= minForFakeExp | n_share >= minForFakeSh), .(user_id, n_exp, n_share)][order(-n_exp),])
+	  print(panelWBots[is_bot==T & (n_fn_exp >= minForFakeExp | n_fn_shares >= minForFakeSh), .(user_id, n_fn_exp, n_fn_shares)][order(-n_fn_exp),])
   }
   return()
 }

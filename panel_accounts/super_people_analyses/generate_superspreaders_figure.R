@@ -12,14 +12,14 @@ source("panel_accounts/super_people_analyses/superPeopleAnalyses.R")	# for prepD
 prep_panel = function(multiplyExpBy10 = T) {
   panel = getPanelData(dataDir="restricted_data", F, F)
   if (multiplyExpBy10) {
-    expColNames = c("total_exposures", "n_exp", "n_black_exp", "n_red_exp", "n_orange_exp")
+    expColNames = c("n_pol_exp", "n_fn_exp", "n_black_exp", "n_red_exp", "n_orange_exp")
     for (colN in expColNames) {
       panel[, (colN) := 10 * get(colN)]
     }
   }
   
-  panel[,n_nonfake_shares := total_shares - n_share]
-  panel[,n_nonfake_exp := total_exposures - n_exp]
+  panel[,n_nonfake_shares := n_pol_shares - n_fn_shares]
+  panel[,n_nonfake_exp := n_pol_exp - n_fn_exp]
   panel[,pol_affl_bucket := cut(pol_affl, 
                                 c(-1.0, -0.7142857, -0.1428571, 0.1428571, 0.7142857, 1.0),
                                 labels = c("extreme left", "left", "center", "right", "extreme right"))]
@@ -43,9 +43,9 @@ prep_panel = function(multiplyExpBy10 = T) {
 compute_bar_info <- function(v,panel,content_type,show_pol_affl=T, scale_factor = 1){
   v <- v + 1  # for the bar showing "everyone else"
   if(content_type == "shares"){
-    panel <- panel[order(-total_shares)]
+    panel <- panel[order(-n_pol_shares)]
   } else{
-    panel <- panel[order(-total_exposures)]
+    panel <- panel[order(-n_pol_exp)]
   }
   panel[, ind := 1:nrow(panel)]
   panel[, ind := ifelse(ind >= v,v,ind)]

@@ -18,11 +18,11 @@ prepDataAndDoAnalyses = function(dataDir, figsDir, justReturnGroups = F) {
  
   ## Prep super-people lists for fake news and overall
   # We already have columns listing who's super (for real and fake), but need the actual ranking tables. These tables cover those people only.
-  overall_exp_by_person = rankPeopleByX(panel[is_superconsumer == T,], "total_exposures")  # is_superconsumer already defined top 1%
-  overall_shares_by_person = rankPeopleByX(panel[is_supersharer == T,], "total_shares") # is_supersharer already defined top 1%
+  overall_exp_by_person = rankPeopleByX(panel[is_superconsumer == T,], "n_pol_exp")  # is_superconsumer already defined top 1%
+  overall_shares_by_person = rankPeopleByX(panel[is_supersharer == T,], "n_pol_shares") # is_supersharer already defined top 1%
 
-  fake_shares_by_person = rankPeopleByX(panel, "n_share", withCumPerc = T)
-  fake_exp_by_person = rankPeopleByX(panel, "n_exp", withCumPerc = T)
+  fake_shares_by_person = rankPeopleByX(panel, "n_fn_shares", withCumPerc = T)
+  fake_exp_by_person = rankPeopleByX(panel, "n_fn_exp", withCumPerc = T)
   # restrict to those responsible for top 80% of fake content
   fake_shares_by_person = fake_shares_by_person[cumperc <= .8,]
   fake_exp_by_person = fake_exp_by_person[cumperc <= .8,]
@@ -60,16 +60,16 @@ readPanelAndAddCols = function(dataDir) {
   panel = getPanelData(dataDir, withTrolls = F, withBots = F, useOrigBotScores = F)
   setkey(panel, user_id)
   
-  panel[, nonFake_shares := total_shares - n_share]
-  panel[, nonFake_exp := total_exposures - n_exp]
+  panel[, nonFake_shares := n_pol_shares - n_fn_shares]
+  panel[, nonFake_exp := n_pol_exp - n_fn_exp]
   
-  panel[, percPoliticalPosts := total_shares / tweetsDuringStudy]
+  panel[, percPoliticalPosts := n_pol_shares / tweetsDuringStudy]
   panel[, prop_exp_followees_alive := exp_followees_alive / orig_exp_followees]
 
-  panel[, rts_prop := n_rts / total_shares]
-  panel[, qts_prop := n_qts / total_shares]
-  panel[, via_at_prop := n_via / total_shares]
-  panel[, orig_via_at_prop := n_orig_via / total_shares]
+  panel[, rts_prop := n_rts / n_pol_shares]
+  panel[, qts_prop := n_qts / n_pol_shares]
+  panel[, via_at_prop := n_via / n_pol_shares]
+  panel[, orig_via_at_prop := n_orig_via / n_pol_shares]
   
   panel[, sex_male := (sex == "Male")]
   
@@ -80,15 +80,15 @@ summarizeGroupsAndCutoffs = function(overall_exp_by_person, overall_shares_by_pe
                           superShareFakeA, superShareRealB, superConsC, normalPeople) {
   print("Groups of people in this analysis")
   print(paste("top 1% of sharing overall:", nrow(overall_shares_by_person), "people, having at least", 
-              tail(overall_shares_by_person, 1)$total_shares, "shares"))
+              tail(overall_shares_by_person, 1)$n_pol_shares, "shares"))
   print(paste("top 1% of exposure overall:", nrow(overall_exp_by_person), "people, having at least", 
-              tail(overall_exp_by_person, 1)$total_exp, "exposures"))
+              tail(overall_exp_by_person, 1)$n_pol_exp, "exposures"))
   
   print(paste("top people sharing fake news:", nrow(fake_shares_by_person), "people, having at least", 
-              tail(fake_shares_by_person, 1)$n_share, "shares of fake news, account for",
+              tail(fake_shares_by_person, 1)$n_fn_shares, "shares of fake news, account for",
               round(tail(fake_shares_by_person, 1)$cumperc, digits=3), "of the fake news"))
   print(paste("top people exposed to fake news:", nrow(fake_exp_by_person), "people, having at least", 
-              tail(fake_exp_by_person, 1)$n_exp, "exposures to fake news, account for",
+              tail(fake_exp_by_person, 1)$n_fn_exp, "exposures to fake news, account for",
               round(tail(fake_exp_by_person, 1)$cumperc, digits=3), "of the fake news"))
   
   print(paste("superShareFakeA: in top 1% of sharing && top 80% of fake news sharing.", nrow(superShareFakeA), "people."))
@@ -101,50 +101,50 @@ summarizeGroupsAndCutoffs = function(overall_exp_by_person, overall_shares_by_pe
 summarizeCumPercsOfGroups = function(panel, superShareFakeA, superShareRealB, superConsC, normalPeople) {
   
   # amount of fake-news, news, fake exposures accounted for by each group
-  # all shares: total_shares
+  # all shares: n_pol_shares
   print("Amounts of content attributable to each group")
-  print("total_shares:")
+  print("n_pol_shares:")
   print(paste("superShareFakeA:", round(
-    sum(panel[superShareFakeA, total_shares]) / sum(panel[, total_shares]), 3)))
+    sum(panel[superShareFakeA, n_pol_shares]) / sum(panel[, n_pol_shares]), 3)))
   print(paste("superShareRealB:", round(
-    sum(panel[superShareRealB, total_shares]) / sum(panel[, total_shares]), 3)))
+    sum(panel[superShareRealB, n_pol_shares]) / sum(panel[, n_pol_shares]), 3)))
   print(paste("superConsC:", round(
-    sum(panel[superConsC, total_shares]) / sum(panel[, total_shares]), 3))) 
+    sum(panel[superConsC, n_pol_shares]) / sum(panel[, n_pol_shares]), 3))) 
   print(paste("normalPeople:", round(
-    sum(panel[normalPeople, total_shares]) / sum(panel[, total_shares]), 3)))
+    sum(panel[normalPeople, n_pol_shares]) / sum(panel[, n_pol_shares]), 3)))
   
   # fake shares
   print("fake shares:")
   print(paste("superShareFakeA:", round(
-    sum(panel[superShareFakeA, n_share]) / sum(panel[, n_share]), 3)))
+    sum(panel[superShareFakeA, n_fn_shares]) / sum(panel[, n_fn_shares]), 3)))
   print(paste("superShareRealB:", round(
-    sum(panel[superShareRealB, n_share]) / sum(panel[, n_share]), 3)))
+    sum(panel[superShareRealB, n_fn_shares]) / sum(panel[, n_fn_shares]), 3)))
   print(paste("superConsC:", round(
-    sum(panel[superConsC, n_share]) / sum(panel[, n_share]), 3))) 
+    sum(panel[superConsC, n_fn_shares]) / sum(panel[, n_fn_shares]), 3))) 
   print(paste("normalPeople:", round(
-    sum(panel[normalPeople, n_share]) / sum(panel[, n_share]), 3)))
+    sum(panel[normalPeople, n_fn_shares]) / sum(panel[, n_fn_shares]), 3)))
   
   # total exposures
   print("total exposures:")
   print(paste("superShareFakeA:", round(
-    sum(panel[superShareFakeA, total_exposures]) / sum(panel[, total_exposures]), 3)))
+    sum(panel[superShareFakeA, n_pol_exp]) / sum(panel[, n_pol_exp]), 3)))
   print(paste("superShareRealB:", round(
-    sum(panel[superShareRealB, total_exposures]) / sum(panel[, total_exposures]), 3)))
+    sum(panel[superShareRealB, n_pol_exp]) / sum(panel[, n_pol_exp]), 3)))
   print(paste("superConsC:", round(
-    sum(panel[superConsC, total_exposures]) / sum(panel[, total_exposures]), 3))) 
+    sum(panel[superConsC, n_pol_exp]) / sum(panel[, n_pol_exp]), 3))) 
   print(paste("normalPeople:", round(
-    sum(panel[normalPeople, total_exposures]) / sum(panel[, total_exposures]), 3)))
+    sum(panel[normalPeople, n_pol_exp]) / sum(panel[, n_pol_exp]), 3)))
   
   # fake exposures
   print("fake exposures:")
   print(paste("superShareFakeA:", round(
-    sum(panel[superShareFakeA, n_exp]) / sum(panel[, n_exp]), 3)))
+    sum(panel[superShareFakeA, n_fn_exp]) / sum(panel[, n_fn_exp]), 3)))
   print(paste("superShareFakeA:", round(
-    sum(panel[superShareRealB, n_exp]) / sum(panel[, n_exp]), 3)))
+    sum(panel[superShareRealB, n_fn_exp]) / sum(panel[, n_fn_exp]), 3)))
   print(paste("superShareFakeA:", round(
-    sum(panel[superConsC, n_exp]) / sum(panel[, n_exp]), 3)))
+    sum(panel[superConsC, n_fn_exp]) / sum(panel[, n_fn_exp]), 3)))
   print(paste("superShareFakeA:", round(
-    sum(panel[normalPeople, n_exp]) / sum(panel[, n_exp]), 3)))
+    sum(panel[normalPeople, n_fn_exp]) / sum(panel[, n_fn_exp]), 3)))
   
   
   cat("\n")
@@ -200,20 +200,20 @@ doAnalyses = function(panel, overall_exp_by_person, overall_shares_by_person, fa
   
 
   # fake news sharing: medians same as in paper already: 0, 0, 3, 213
-  plotAndCalcForStat(panel, "n_share",  superShareFakeA, superShareRealB, superConsC, normalPeople, plotAsLog = T,
-                     savePlotAsFile = file.path(figsDir, "n_share.pdf"))
-  checkSigMeanBStrap(panel, "n_share", superShareFakeA, superShareRealB, superConsC, normalPeople, useLog = T)
+  plotAndCalcForStat(panel, "n_fn_shares",  superShareFakeA, superShareRealB, superConsC, normalPeople, plotAsLog = T,
+                     savePlotAsFile = file.path(figsDir, "n_fn_shares.pdf"))
+  checkSigMeanBStrap(panel, "n_fn_shares", superShareFakeA, superShareRealB, superConsC, normalPeople, useLog = T)
   # of course superShareFakeA is higher than everyone else -- it's what defines the group
   # also check if SS-R > SC: -> yes.
-  pvalBVsC = t.test(log10(panel[superShareRealB, n_share]+1), log10(panel[superConsC, n_share]+1), alternative = "greater")$p.value
-  print(paste("t-test of whether SS-R > SC for n_share: pval =", pvalBVsC))
+  pvalBVsC = t.test(log10(panel[superShareRealB, n_fn_shares]+1), log10(panel[superConsC, n_fn_shares]+1), alternative = "greater")$p.value
+  print(paste("t-test of whether SS-R > SC for n_fn_shares: pval =", pvalBVsC))
   
   
   # fake news exposure: medians are 1 (normal) << 536 (real-share) << 3487 (cons) << 13000 (fake-share -- wow, higher than before)
   # (note: values in paper are multiplied by 10 to estimate the full firehose)
-  plotAndCalcForStat(panel, "n_exp",  superShareFakeA, superShareRealB, superConsC, normalPeople, plotAsLog = T,
-                     savePlotAsFile = file.path(figsDir, "n_exp.pdf"))
-  checkSigMeanBStrap(panel, "n_exp", superShareFakeA, superShareRealB, superConsC, normalPeople, useLog = T)
+  plotAndCalcForStat(panel, "n_fn_exp",  superShareFakeA, superShareRealB, superConsC, normalPeople, plotAsLog = T,
+                     savePlotAsFile = file.path(figsDir, "n_fn_exp.pdf"))
+  checkSigMeanBStrap(panel, "n_fn_exp", superShareFakeA, superShareRealB, superConsC, normalPeople, useLog = T)
   # all are significant
 
   # non-fake, measured as total minus fake. Ordered as expected, but no longer significant difference between SS-F and SS-R
@@ -249,7 +249,7 @@ doAnalyses = function(panel, overall_exp_by_person, overall_shares_by_person, fa
 checkIndivSrcStats = function(baseDir, panel, overall_exp_by_person, overall_shares_by_person, fake_shares_by_person, fake_exp_by_person, 
                               superShareFakeA, superShareRealB, superConsC, normalPeople, figsDir) {
   # Note: these stats are only relevant for people who share at all
-  panelWStats = panel[total_shares > 0,] 
+  panelWStats = panel[n_pol_shares > 0,] 
   sc_whoShare = fintersect(superConsC, panelWStats[, .(user_id)])
   normal_whoShare = fintersect(normalPeople, panelWStats[, .(user_id)])
   print("The following analyses restricted to people who shared at least one political URL")

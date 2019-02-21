@@ -42,20 +42,22 @@ urls_exp <- merge(x=urls[,.(tweet_id, user_id, website, canonical_url, ts, ts_re
 urls_exp <- merge(x=urls_exp, y=panel, by.x = "panel_uid", by.y = "user_id", all.x = T)
 
 # calculate exposure and sharing variables and merge to other vars
-exp_vars <- urls_exp[,.(n_pol_exp=.N,
-                        n_fn_exp=sum(domain_color_num<4),
-                        n_fn_exp_last_month=sum(domain_color_num<4 & ts_rel_days>=(-32) & ts_rel_days<=6)), # same period as Guess et al.
-                     by=panel_uid]
-share_vars <- urls_panel[,.(n_pol_shares=.N,
-                            n_fn_shares=sum(domain_color_num<4)), 
-                         by=user_id]
-pol_exp_share <- merge(x=exp_vars, y=share_vars, by.x="panel_uid", by.y="user_id",all=T)
-for (j in c("n_pol_exp", "n_fn_exp", "n_fn_exp_last_month", "n_pol_shares", "n_fn_shares"))
-  set(pol_exp_share, which(is.na(pol_exp_share[[j]])),j,0)
-urls <- merge(x=urls, y=pol_exp_share, by.x = "user_id", by.y = "panel_uid", all.x = T)
-urls_panel <- merge(x=urls_panel, y=pol_exp_share, by.x = "user_id", by.y = "panel_uid", all.x = T)
-urls_exp <- merge(x=urls_exp, y=pol_exp_share, by = "panel_uid", all.x = T)
-panel <- merge(panel, pol_exp_share, by.x="user_id", by.y="panel_uid", all.x=T)
+# exp_vars <- urls_exp[,.(n_pol_exp=.N,
+#                         n_fn_exp=sum(domain_color_num<4),
+#                         n_fn_exp_last_month=sum(domain_color_num<4 & ts_rel_days>=(-32) & ts_rel_days<=6)), # same period as Guess et al.
+#                      by=panel_uid]
+# share_vars <- urls_panel[,.(n_pol_shares=.N,
+#                             n_fn_shares=sum(domain_color_num<4)), 
+#                          by=user_id]
+# pol_exp_share <- merge(x=exp_vars, y=share_vars, by.x="panel_uid", by.y="user_id",all=T)
+# for (j in c("n_pol_exp", "n_fn_exp", "n_fn_exp_last_month", "n_pol_shares", "n_fn_shares"))
+#   set(pol_exp_share, which(is.na(pol_exp_share[[j]])),j,0)
+# panel <- merge(panel, pol_exp_share, by.x="user_id", by.y="panel_uid", all.x=T)
+sel_cols <- c("user_id", "n_pol_exp", "n_fn_exp", "n_fn_exp_last_month", "n_pol_shares", "n_fn_shares")
+urls <- merge(x=urls, y=panel[,sel_cols, with=F], by = "user_id", all.x = T)
+urls_panel <- merge(x=urls_panel, y=panel[, sel_cols, with=F], by = "user_id", all.x = T)
+urls_exp <- merge(x=urls_exp, y=panel[, sel_cols, with=F], by.x = "panel_uid", by.y = "user_id", all.x = T)
+
 
 ### panel preperation
 panel <- panel[,`:=`(
