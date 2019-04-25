@@ -1,0 +1,238 @@
+---
+title: "Calculate political affinity scores"
+author: "Nir Grinberg"
+date: "12/31/2018"
+output:
+  html_notebook:
+    top: yes
+  md_document:
+    toc: yes
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r global_settings}
+library(knitr)
+opts_chunk$set(eval=TRUE, include=TRUE, cache=FALSE, cache.path='./__cache__/',
+               bootstrap.thumbnail.size= 'col-md-12', bootstrap.thumbnail = TRUE, bootstrap.show.code= FALSE, 
+               fig.path='.', dev=c('png','pdf','svg','cairo_ps'), fig.width=8, fig.height=4, dpi=300)
+
+knit_hooks$set(embed_fonts = function(before, options, envir) {
+  if ((!before) & (length(options['label'])>0)) {
+    old_path <- paste0(options['fig.path'], options['label'], '.pdf')
+    new_path <- paste0(options['fig.path'], options['label'], '-1.pdf')
+    if (file.exists(old_path)) {
+        embed_fonts(old_path, outfile = new_path)
+    }
+    NULL
+  }
+})
+# library(rmarkdown)
+# render('concentration/concentrate.Rmd', 'all', knit_root_dir='..')
+```
+
+```{r imports, eval=TRUE, echo=TRUE, results='hide', warning=FALSE, error=FALSE, message=FALSE}
+library(data.table)
+library(ggplot2)
+library(scales)
+library(stats)
+library(Hmisc)
+library(RColorBrewer)
+library(car)
+# library(doParallel)
+# registerDoParallel(cores = 7)
+library(MatchIt)
+```
+
+```{r utils}
+gini_quick <- function(y, n = NA) {
+  # Computes gini coefficient
+  # For a random sample yi, indexed i = 1..n in non-decreasing order (yi ≤ yi+1), the statistic:
+  # G = 2*(sum_i(i*y_i))/(n*sum_i(y_i)) - (n+1)/n
+  if (is.na(n)) {
+    n <- length(y)
+  }
+  y <- sort(y)
+  i <- seq(n-length(y)+1, n)
+  return((2*(i%*%y)[1,1]/sum(y) - (n+1))/n)
+}
+
+set1_colors = function(number) {
+	return (brewer.pal(9, "Set1")[c(-6,-8)][(number %% 7) + 1])
+}
+```
+
+```{r load_data}
+vars <- c("all_domains2panel_exp_stats", "domain_panel_exp_stats", "ht2site", 
+          "all_ht2site", "all_domains2user_share_stats", "domain_panel_share_stats")
+load_vars <- function(var_name) {
+  assign(var_name, 
+         fread(paste0("gunzip -c restricted_data/concent_", var_name, ".tsv.gz"), showProgress = F), 
+         envir = .GlobalEnv)
+}
+temp <- sapply(vars, load_vars)
+```
+
+# Exposure
+
+```{r compuate_user2domain_exp_stats}
+all_domains_exp_stats <- all_domains2panel_exp_stats[,.(n_exp=sum(n_exp)), by=.(website)]
+domain_exp_stats <- domain_panel_exp_stats[, .(n_exp=sum(n_exp), n_ppl_exp=.N),
+                                           by=.(website, is_fake)]
+```
+
+```{r boot_rand_exp}
+rand_nonfake_gini <- function(i, n_domains, ...) {
+  domains <- domain_exp_stats[is_fake==F,][sample.int(.N, n_domains),]$website
+  ppl_exp <- domain_panel_exp_stats[website %in% domains, .(n_exp=sum(n_exp)), by=panel_uid]$n_exp
+  return(gini_quick(ppl_exp))
+}
+# random sample of all domains (including non-political)
+rand_all_domains_gini <- function(i, n_domains, ...) {
+  domains <- all_domains2panel_exp_stats[sample.int(.N, n_domains),]$website 
+  ppl_exp <- all_domains2panel_exp_stats[website %in% domains, .(n_exp=sum(n_exp)), by=panel_uid]$n_exp
+  return(gini_quick(ppl_exp))
+}
+
+n_samples <- 10000
+n_fake             <- nrow(domain_exp_stats[is_fake==T])
+g_fake             <- gini_quick(domain_panel_exp_stats[is_fake==T, .(n_exp=sum(n_exp)), by=panel_uid]$n_exp)
+g_rand             <- sapply(seq(1, n_samples), rand_nonfake_gini, n_domains = n_fake)
+g_rand_all_domains <- sapply(seq(1, n_samples), rand_all_domains_gini, n_domains = n_fake)
+```
+
+```{r matched_exp_boot}
+set.seed(135345)
+m.out <- matchit(is_fake ~ n_exp, data = domain_exp_stats[,.(website,n_exp, is_fake)], method = "nearest", replace=F, ratio=5)
+print(summary(m.out))
+m.data <- data.table(match.data(m.out))
+matched_nonfake_gini <- function(i, n_domains, ...) {
+  domains <- m.data[is_fake==F,][sample.int(.N, n_domains),]$website
+  ppl_exp <- domain_panel_exp_stats[website %in% domains, .(n_exp=sum(n_exp)), by=panel_uid]$n_exp
+  return(gini_quick(ppl_exp))#, n=n_ppl_panel))
+}
+# g_matched <- unlist(foreach(i = 1:n_samples) %dopar% {
+#     matched_nonfake_gini(i, n_domains = n_fake)
+#   })
+g_matched  <- sapply(seq(1, n_samples), matched_nonfake_gini, n_domains = n_fake)
+
+# matching domains based on total number of exposures
+set.seed(135345)
+m.out2 <- matchit(is_fake ~ n_ppl_exp, data = domain_exp_stats[,.(website,n_ppl_exp, is_fake)], method = "nearest", replace=F, ratio=5)
+print(summary(m.out2))
+m.data2 <- data.table(match.data(m.out2))
+matched_nonfake_gini2 <- function(i, n_domains, ...) {
+  domains <- m.data2[is_fake==F,][sample.int(.N, n_domains),]$website
+  ppl_exp <- domain_panel_exp_stats[website %in% domains, .(n_exp=sum(n_exp)), by=panel_uid]$n_exp
+  return(gini_quick(ppl_exp))#, n=n_ppl_panel))
+}
+g_matched2  <- sapply(seq(1, n_samples), matched_nonfake_gini2, n_domains = n_fake)
+```
+
+```{r ht_exp_boot}
+ht_nonfake_gini2 <- function(sel_ht, ...) {
+  domains <- ht2site[ht==sel_ht,]$website
+  ppl_exp <- domain_panel_exp_stats[website %in% domains, .(n_exp=sum(n_exp)), by=panel_uid]$n_exp
+  return(gini_quick(ppl_exp))#, n=n_ppl_panel))
+}
+g_ht  <- sapply(unique(ht2site$ht), ht_nonfake_gini2)
+
+ht_all_domains_gini <- function(sel_ht, ...) {
+  domains <- all_ht2site[ht==sel_ht,]$website
+  ppl_exp <- all_domains2panel_exp_stats[website %in% domains, .(n_exp=sum(n_exp)), by=panel_uid]$n_exp
+  return(gini_quick(ppl_exp))#, n=n_ppl_panel))
+}
+g_ht_all  <- sapply(unique(all_ht2site$ht), ht_all_domains_gini)
+```
+
+```{r exp_plot}
+plot_df <- data.table(stack(list(
+  "Random"=g_rand_all_domains, "Pol. non-fake"=g_rand,
+  "Pol. matched vol."=g_matched, "Pol. matched ppl"=g_matched2,
+  "Hashtags"=g_ht_all, "Pol. Hashtags"=g_ht
+)))
+setnames(plot_df, c("values", "ind"), c("g", "cat"))
+cats <- levels(plot_df$cat)
+ggplot(plot_df, aes(g)) +
+  geom_density(aes(y=..density..*0.01, color=cat), bw=0.01, size=1.25, fill=NA) + 
+  scale_color_manual(values=c("black", set1_colors(7), set1_colors(2), set1_colors(1), set1_colors(3), set1_colors(4)), name=NULL) +
+  geom_vline(xintercept = g_fake, size=1.25, linetype="longdash", color="red") +
+  #geom_vline(xintercept = g_all_pol, size=1.25, linetype="dashed", color="black") +
+  scale_y_continuous(expand = c(0,0), labels = percent) + 
+  scale_x_continuous(expand = c(0,0)) + 
+  coord_cartesian(xlim = c(0.55,1)) +
+  labs(x = "Gini coefficient", y="Frequency") +
+  theme(legend.position = c(0.25,0.75))
+```
+
+# Sharing
+
+```{r compute_user2domain_sharing_stats}
+domain_share_stats <- domain_panel_share_stats[, .(n_share=sum(n_share), n_ppl_sharing=length(unique(user_id))),
+                                                 by=.(website, is_fake)]
+all_domains_share_stats <- all_domains2user_share_stats[, 
+      .(n_share=sum(n_share), n_ppl_sharing=length(unique(user_id))),
+      by=.(website)]
+n_fake <- nrow(domain_share_stats[is_fake==T,]) # 173
+```
+
+```{r boot_rand_share}
+rand_nonfake_gini <- function(i, n_domains, ...) {
+  domains <- domain_share_stats[is_fake==F,][sample.int(.N, n_domains),]$website
+  ppl_share <- domain_panel_share_stats[website %in% domains, .(n_share=sum(n_share)), by=user_id]$n_share
+  return(gini_quick(ppl_share)) #, n=n_ppl_panel))
+}
+rand_all_domains_gini <- function(i, n_domains, ...) {
+  domains <- all_domains_share_stats[sample.int(.N, n_domains),]$website
+  ppl_share <- all_domains2user_share_stats[website %in% domains, .(n_share=sum(n_share)), by=user_id]$n_share
+  return(gini_quick(ppl_share)) #, n=n_ppl_panel))
+}
+
+n_samples <- 10000
+g_all_pol <- gini_quick(domain_panel_share_stats[, .(n_share=sum(n_share)), by=user_id]$n_share) #, n=n_ppl_panel)
+g_fake    <- gini_quick(domain_panel_share_stats[is_fake==T, .(n_share=sum(n_share)), by=user_id]$n_share) #, n=n_ppl_panel)
+g_rand    <- sapply(seq(1, n_samples), rand_nonfake_gini, n_domains = n_fake)
+g_rand_all_domains <- sapply(seq(1, n_samples), rand_all_domains_gini, n_domains = n_fake)
+```
+
+```{r matched_share_boot}
+#### Sampling political domains matched on volume shared
+set.seed(135345)
+m.out <- matchit(is_fake ~ n_share, data = domain_share_stats[,.(website,n_share, is_fake)], method = "nearest", replace=F, ratio=5)
+m.data <- data.table(match.data(m.out))
+matched_nonfake_gini <- function(i, n_domains, ...) {
+  domains <- m.data[is_fake==F,][sample.int(.N, n_domains),]$website
+  ppl_share <- domain_panel_share_stats[website %in% domains, .(n_share=sum(n_share)), by=user_id]$n_share
+  return(gini_quick(ppl_share))#, n=n_ppl_panel))
+}
+g_matched  <- sapply(seq(1, n_samples), matched_nonfake_gini, n_domains = n_fake)
+
+#### Sampling political domains matched on # people sharing
+set.seed(135345)
+m.out2 <- matchit(is_fake ~ n_ppl_sharing, data = domain_share_stats[,.(website,n_ppl_sharing, is_fake)], method = "nearest", replace=F, ratio=5)
+m.data2 <- data.table(match.data(m.out2))
+matched_nonfake_gini2 <- function(i, n_domains, ...) {
+  domains <- m.data2[is_fake==F,][sample.int(.N, n_domains),]$website
+  ppl_share <- domain_panel_share_stats[website %in% domains, .(n_share=sum(n_share)), by=user_id]$n_share
+  return(gini_quick(ppl_share))#, n=n_ppl_panel))
+}
+g_matched2  <- sapply(seq(1, n_samples), matched_nonfake_gini2, n_domains = n_fake)
+```
+
+```{r share_plot}
+plot_df <- data.table(stack(list(
+  "Random"=g_rand_all_domains, "Pol. non-fake"=g_rand,
+  "Pol. matched vol."=g_matched, "Pol. matched ppl"=g_matched2
+)))
+setnames(plot_df, c("values", "ind"), c("g", "cat"))
+cats <- levels(plot_df$cat)
+ggplot(plot_df, aes(g)) +
+  geom_density(aes(y=..density..*0.025, color=cat), bw=0.025, size=1.25, fill=NA) + 
+  scale_color_manual(values=c("black", set1_colors(7), set1_colors(2), set1_colors(1)), name=NULL) +
+  geom_vline(xintercept = g_fake, size=1.25, linetype="longdash", color="red") +
+  scale_y_continuous(expand = c(0,0), labels = percent) + 
+  scale_x_continuous(expand = c(0,0)) + 
+  coord_cartesian(xlim = c(0.3,1)) +
+  labs(x = "Gini coefficient", y="Frequency") +
+  theme(legend.position = c(0.25,0.75))
+```

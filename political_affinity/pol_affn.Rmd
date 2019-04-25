@@ -1,0 +1,192 @@
+---
+title: "Calculate political affinity scores"
+author: "Nir Grinberg"
+date: "12/31/2018"
+output:
+  html_notebook:
+    top: yes
+  md_document:
+    toc: yes
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r global_settings}
+library(knitr)
+opts_chunk$set(eval=TRUE, include=TRUE, cache=FALSE, cache.path='./__cache__/',
+               bootstrap.thumbnail.size= 'col-md-12', bootstrap.thumbnail = TRUE, bootstrap.show.code= FALSE, 
+               fig.path='.', dev=c('png','pdf','svg','cairo_ps'), fig.width=8, fig.height=4, dpi=300)
+
+knit_hooks$set(embed_fonts = function(before, options, envir) {
+  if ((!before) & (length(options['label'])>0)) {
+    old_path <- paste0(options['fig.path'], options['label'], '.pdf')
+    new_path <- paste0(options['fig.path'], options['label'], '-1.pdf')
+    if (file.exists(old_path)) {
+        embed_fonts(old_path, outfile = new_path)
+    }
+    NULL
+  }
+})
+# library(rmarkdown)
+# render('political_affinity/pol_affn.Rmd', 'all', knit_root_dir='..')
+```
+
+```{r imports, eval=TRUE, echo=TRUE, results='hide', warning=FALSE, error=FALSE, message=FALSE}
+library(data.table)
+library(ggplot2)
+library(ggridges)
+library(ggrepel)
+library(scales)
+library(stats)
+library(Hmisc)
+# library(RColorBrewer)
+library(car)
+library(stargazer)
+# library(doParallel)
+# registerDoParallel(cores = 7)
+library(arm)
+library(glmnet)
+library(pROC)
+```
+
+```{r load_exp_data}
+vars <- c("urls", "urls_panel", "urls_exp", "friendships", "panel")
+if (length(setdiff(vars, ls(all.names = T)))>0) {
+  source("util/load_exp_data.R", chdir = T)
+}
+pol_act_l <- c("extreme left", "left", "center", "right", "extreme right", 
+               "apolitical", "bot", "superconsumer", "supersharer")
+# political exposure per user and site
+user_site_exp <- urls_exp[domain_color_num>4,.(n_exp=.N), by=.(panel_uid, website)]
+user_site_exp <- user_site_exp[, `:=`(
+  pct_site_exp=n_exp/sum(n_exp),
+  total_pol_exp=sum(n_exp)), 
+  by=.(panel_uid)]
+user_site_exp <- merge(x=user_site_exp, 
+                       y=panel[!is.na(party) & party %in% c("Republican", "Democrat") & is_outlier==F,
+                               .(user_id, party)],
+                       by.x = "panel_uid", by.y = "user_id", all.x = T)
+```
+
+```{r compute_site_align}
+# site_align <- fread("political_affinity/site_align.tsv")
+align_exp <- user_site_exp[!is.na(party) & total_pol_exp>=100 & pct_site_exp>0.01,]
+align_exp <- align_exp[, `:=`(n_uniq_users=.N), by=.(website)]
+nd <- length(unique(align_exp[n_uniq_users>30 & party=="Democrat"]$panel_uid))
+nr <- length(unique(align_exp[n_uniq_users>30 & party=="Republican"]$panel_uid))
+wd <- 0.5*(nd+nr)/nd
+wr <- 0.5*(nd+nr)/nr
+site_align_rep <- align_exp[n_uniq_users>30,
+                            .(n=.N,
+                              n_rep=sum(party=="Republican"),
+                              n_dem=sum(party=="Democrat")), by=.(website)]
+site_align_rep <- site_align_rep[,`:=`(
+  #align_raw = 2*n_rep/n-1,
+  align     = 2*wr*n_rep/(wd*n_dem+wr*n_rep)-1
+)]
+site_align <- site_align_rep[,.(website, align)]
+```
+
+```{r compare_with_bakshy_etal}
+# Using Facebook's top 500 sites from Science paper
+fb_domain_align <- fread('restricted_data/fb_top500_domain_affl.csv', showProgress = F, 
+                         select = c("domain", "avg_align"))
+fb_domain_align <- unique(fb_domain_align, by=c("domain"))
+fb_domain_align <- merge(x=fb_domain_align, y=site_align, by.x = "domain", 
+                         by.y = "website", all.x = T)[order(avg_align)]
+print(sprintf("%d/%d sites overlaped with Bakshy et al.'s list", 
+              nrow(fb_domain_align[!is.na(align)]), nrow(fb_domain_align) )) 
+print(cor.test(fb_domain_align[!is.na(align)]$avg_align, 
+               fb_domain_align[!is.na(align)]$align, 
+               method = "pearson", conf.level = 0.95))
+
+ggplot(data = fb_domain_align[!is.na(align),], 
+            aes(x=avg_align, y=align )) + 
+  geom_point() +
+  scale_x_continuous(expand=c(0,0), limits=c(-1,1)) +
+  scale_y_continuous(expand=c(0,0), limits=c(-1,1)) +
+  geom_smooth(data=fb_domain_align[!is.na(align),], method='lm',formula=y~x, fullrange=T) + 
+  geom_abline(slope = 1, intercept = 0) + 
+  geom_text_repel(aes(label=domain), size=1) +
+  labs(y="Site Alignment", x="Alignment (Bakshy et al.)") + 
+  theme(axis.line.x=element_blank())
+```
+
+```{r compare_with_budak_etal}
+budak <- data.table(
+  website=c(
+    "dailykos.com", "nytimes.com", "huffingtonpost.com", "latimes.com", 
+    "washingtonpost.com", "bbcnews.com", "cnn.com", "yahoo.com", "reuters.com",
+    "nbcnews.com", "chicagotribune.com", "usatoday.com", "wsj.com", 
+    "foxnews.com", "breitbart.com"), 
+  slant=c(-0.24, -0.054, -0.05,  -0.04, 
+          -0.01, -0.01,  -0.005, -0.005, 0, 
+          0.005,  0.01,   0.11,   0.06,  
+          0.11,   0.17))
+budak <- merge(x=budak, y=site_align, by = "website", all.x = T)[order(slant)]
+budak_m <- budak[!is.na(align),]
+print(sprintf("%d/%d sites overlaped with Budak et al.'s list", 
+              nrow(budak_m), nrow(budak) )) 
+print(cor.test(budak_m$slant,budak_m$align, method = "pearson", conf.level = 0.95))
+print(budak_m[order(slant),.(website, slant, align)])
+```
+
+```{r compute_user_align_scores}
+user_align_sites <- merge(x=user_site_exp,
+                          y=site_align[,.(website, align)],
+                          by = "website")
+user_align <- user_align_sites[,.(pol_align=weighted.mean(align, n_exp)), 
+                               by=.(panel_uid)]
+```
+
+```{r compute_pol_affl}
+imp_data <- merge(x=panel[,.(user_id, perc_obama, party, is_outlier, pol_affl)], y=user_align, by.x = "user_id", by.y = "panel_uid", all.x = T)
+imp_data <- imp_data[, party_dv:=factor(party, c("Democrat", "Republican"))]
+imp_data <- imp_data[, party:=NULL]
+imp_no_na <- imp_data[!is.na(party_dv) & is_outlier==F,]
+
+# train on registered voters, predict continous score for everyone
+f_rest <- ~ perc_obama + pol_align 
+m1 <- cv.glmnet(as.matrix(model.matrix(f_rest, imp_no_na[!is.na(pol_align)])), 
+                imp_no_na[!is.na(pol_align)]$party_dv, family="binomial", alpha = 0,
+                # original dataset had slightly different mean so offseting now
+                offset = rep(-0.17, nrow(imp_no_na[!is.na(pol_align)])) 
+                )
+imp_data <- imp_data[!is.na(pol_align), party_score:=
+                       as.vector(predict(m1, newx = as.matrix(model.matrix(f_rest, imp_data[!is.na(pol_align)])), 
+                                         s = "lambda.min", type = "response", newoffset = 0))]
+
+# train a second model based on just the perc_obama for cases where pol_align is NA
+m2 <- cv.glmnet(as.matrix(model.matrix(~ perc_obama, imp_no_na)), 
+                imp_no_na$party_dv, family="binomial", alpha = 0, offset = rep(-0.38, nrow(imp_no_na)))
+imp_data <- imp_data[is.na(pol_align), party_score:=
+                       as.vector(predict(m2, newx = as.matrix(model.matrix(~ perc_obama, imp_data[is.na(pol_align)])), 
+                                         s = "lambda.1se", type = "response", newoffset = 0))]
+imp_data <- imp_data[, pol_affl_rep:=2*party_score-1]
+
+print(sprintf("99%% of reproduced affiliation scores are less than this much off: %2.3f", 
+              quantile(abs(imp_data$pol_affl-imp_data$pol_affl_rep), 0.99)))
+print(auc(imp_data[!is.na(party_dv),]$party_dv, imp_data[!is.na(party_dv),]$party_score)) # 0.8074
+```
+
+```{r fn_exp_dist_by_pol_affl, fig.width=8, fig.height=8}
+plot_df <- panel[is_compromised==F & is_bot==F & pol_affl_act!="apolitical",]
+lvls_rev <- function(f) factor(f, rev(levels(f)))
+plot_lbls <- plot_df[,.(
+                    lbl=sprintf("N=%d, %2.0f%%", .N, 100*sum(n_fn_exp<1)/.N), exp_rate=median(exp_rate[n_fn_exp>0])), 
+                    by=pol_affl_act]
+ggplot(plot_df[n_fn_exp>0], aes(x=exp_rate, y=lvls_rev(pol_affl_act) )) + 
+  geom_density_ridges_gradient(
+    aes(fill = ..x..), scale = 2, size = 0.3
+  ) +
+  scale_fill_gradientn(
+    colours = c("#0D0887FF", "#CC4678FF", "#F0F921FF"),
+    guide = "none"
+  ) +
+  # geom_text(data = plot_lbls, aes(label=nz_pct), size=4, colour="black", vjust = -2, nudge_x = -0.3, hjust = 0.5) +
+  geom_text(data = plot_lbls, aes(label=lbl, x=0.00015), size=4, colour="black", vjust = -3.5, hjust = 0) +
+  scale_x_log10(labels=percent, breaks = c(0.001, 0.01, 0.1), limits = c(0.0001, 0.6), expand = c(0, 0) ) +
+  scale_y_discrete(expand = c(0.04, 0)) +
+  annotation_logticks(sides = "b") +
+  labs(x="Fraction of fake news", y = NULL)
+```

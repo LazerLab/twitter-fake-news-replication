@@ -4,7 +4,7 @@
 
 This repository contains public replication materials for the paper "Fake News on Twitter During the 2016 U.S. Presidential Election."
 
-Please note that some of the code in this repository requires access to the restricted data release for this paper. For access to this data, please contact d.lazer@northeastern.edu.  Once you have access, you can simply place the required file into the data directory of the particular result you are replicating to finish the replication.
+Please note that some of the code in this repository requires access to the restricted data release for this paper. For access to this data, please contact d.lazer@northeastern.edu. Once you have access, you can simply place the required file into the data directory of the particular result you are replicating to finish the replication.
 
 # Structure of the Repository
 
@@ -27,7 +27,7 @@ This directory contains data files only that describe our labeling of websites. 
 
 ## ```figure_1```
 
-This folder contains code and data necessary to replicate Figure 1 in the paper.
+This folder contains code necessary to replicate Figure 1 in the paper. The data for subplot 1A
 
 ### Code
 
@@ -58,7 +58,6 @@ The analysis in ```exp_share_regressions/exp_share_reg.Rmd``` covers the results
 While the data for replicating this analysis is available under restricted-access, the output of its execution on (de-identified data) is available for easy viewing in html format at ```exp_share_regressions/exp_share_reg.nb.html```.
 
 ## ```coexposure_network```
-
 
 ### Code
 The script ```coexposure_network/analysis.R``` generates Figure 7 from the main text, as well as Figures S10 and S11 in the supplementary.
@@ -130,7 +129,7 @@ Code for Figure 2 and Section S.9.
 - `superPeopleAnalyses.R` generates data for Table S3. Its output is included here in `superPeopleAnalyses-out.txt`.
 
 ### Data
-Both scripts rely on  `panel_with_counts.tsv` from the restricted data release.
+Both scripts rely on  `panel.tsv` from the restricted data release.
 
 ## `panel_accounts/`: `profile_validation` and `outlier_validation`
 
@@ -142,15 +141,13 @@ Code and results for Section S.8.
 its output is in ```results/03-out.txt```.
 
 ### Data
-- `panel_accounts/outlier_validation` uses `restricted_data/panel_with_counts.tsv`.
+- `panel_accounts/outlier_validation` uses `restricted_data/panel.tsv`.
 - `panel_accounts/profile_validation` uses individual-level data that is not being released.
 
+## Political affinity classifier
 
+The analysis in ```political_affinity/pol_affn.Rmd``` covers the results in S.10. and in Fig. 3 on the main body. This requires the ```restricted_data``` folder.
 
-## ```analyses/capping_simulation```
+## Concentration analysis for Section S.15
 
-Code for generating Figure S14. Requires ```restricted_data``` for its files ```panel.tsv``` and ```urls.tsv.gz```.
-
-- ```cappingSimData.R``` generates the data files ```capping_preserved2.csv``` and ```origSums.Rdata``` (included here).
-- ```cappingPlot.R``` uses those files to create the plot ```img/cappingSim4.pdf``` (included here).
-
+Code for generating Figure S13 can be found at ```concentration/concentrate.Rmd```. This requires the ```restricted_data``` folder.
