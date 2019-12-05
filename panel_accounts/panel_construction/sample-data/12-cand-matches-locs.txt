@@ -1,0 +1,58 @@
+voter_id	first_name	last_name	city	state	state_count	twProfileID	twProfileName	twProfileHandle	twProfileLoc	nameHandleWords	loc2	newInferredLoc
+10004	patricia	azar	BROOKLYN	NY	1	101000086	PATRICIA ALCAZAR	alcazar5817	""	patricia alcazar azar cazar		
+10004	patricia	azar	BROOKLYN	NY	1	101000087	patricia miriam azar	MiriamAzar	""	patricia miriam azar		
+10004	patricia	azar	BROOKLYN	NY	1	101000088	Patricia Olvera	72_azar	Maryland	patricia olvera azar	MD	MD
+10004	patricia	azar	BROOKLYN	NY	1	101000089	Patricia	TrishAzar	""	patricia trish azar		
+10004	patricia	azar	BROOKLYN	NY	1	101000090	patricia SALAZAR	Salazar07Paty	""	patricia salazar azar aty lazar paty		
+10004	patricia	azar	BROOKLYN	NY	1	101000091	Patricia azar	patricia_azar	lebanon	patricia azar	foreign	foreign
+10008	patricia	belser	LANCASTER	PA	1	101000092	PatBel	belser_patricia	""	patbel pat bel ricia ser patricia belser		
+10009	patricia	bowers	PHILADELPHIA	PA	1	101000093	Patricia Bowers	anershova12267	""	patricia bowers anershova		
+10009	patricia	bowers	PHILADELPHIA	PA	1	101000094	Patricia Bowers	PDDbowers	Grove Oak, Alabama	patricia bowers dd pdd	AL	AL
+10009	patricia	bowers	PHILADELPHIA	PA	1	101000095	Patricia bowers	patricia_dee	""	patricia bowers dee		
+10009	patricia	bowers	PHILADELPHIA	PA	1	101000096	Patricia Bowers	bowersPattyjo	Dayton, Nevada	patricia bowers attyjo pattyjo	NV	NV
+10009	patricia	bowers	PHILADELPHIA	PA	1	101000097	Patricia Bowers	Patrici54092263	""	patricia bowers patrici		
+10010	patricia	boyce	LANCASTER	PA	1	101000098	Patricia Boyce	pboyce725	""	patricia boyce		
+10010	patricia	boyce	LANCASTER	PA	1	101000099	Patricia Boyce	Patty70_Boyce	""	patricia boyce atty patty		
+10010	patricia	boyce	LANCASTER	PA	1	101000100	patricia boyce	patriciaboyce528	""	patricia boyce		
+10010	patricia	boyce	LANCASTER	PA	1	101000101	patricia ann boyce	patriciaanneboyc	pennsville, nj	patricia ann boyce eboyc anneboyc	NJ	NJ
+10010	patricia	boyce	LANCASTER	PA	1	101000102	Patricia Boyce	PatyPatyBarbosan	""	patricia boyce arbosan aty paty barbosan		
+10031	frank	bundy	PALMYRA	PA	1	101000103	Frank Bundy	frankbundelicious	Cheektowaga, NY	frank bundy undelicious bundelicious	NY	NY
+10031	frank	bundy	PALMYRA	PA	1	101000104	Frank Bundock	FBundy19	westfield	frank bundock undy bundy	unparsed	unparsed
+10032	frank	cain	WALLINGFORD	ME	1	101000105	Frank Cain	FrankCain5	""	frank cain		
+10032	frank	cain	WALLINGFORD	ME	1	101000106	Frank Cain	6dca376c6007471	""	frank cain dca		
+10032	frank	cain	WALLINGFORD	ME	1	101000107	Frank Cain	CainFrank	Madison, WI	frank cain	WI	WI
+10032	frank	cain	WALLINGFORD	ME	1	101000108	FrankYnStein	MarkOfCain15	""	frankynstein frank yn stein mark cain of		
+10032	frank	cain	WALLINGFORD	ME	1	101000109	Frank Cain	FcainCain	""	frank cain caincain		
+10032	frank	cain	WALLINGFORD	ME	1	101000110	Frank Cain	GeelongRoofer	Geelong, Victoria	frank cain geelong roofer	foreign	foreign
+10032	frank	cain	WALLINGFORD	ME	1	101000111	Frank Cain	FrankCain14	""	frank cain		
+10032	frank	cain	WALLINGFORD	ME	1	101000112	frank cain	gateshead1947	""	frank cain gateshead		
+10032	frank	cain	WALLINGFORD	ME	1	101000113	Cain Sophia	FrankWord	""	cain sophia frank word		
+10038	franklin	cooper	BENSALEM	PA	1	101000114	Cooper Franklin	KnowLegde_	""	cooper franklin legde know		
+10038	franklin	cooper	BENSALEM	PA	1	101000115	franklin cooper	FranklinWiked2	California	franklin cooper wiked franklinwiked	CA	CA
+10038	franklin	cooper	BENSALEM	PA	1	101000116	franklin cooper	rockinhardnow	Big Bear City, Ca.	franklin cooper rockinhardnow	CA	CA
+10038	franklin	cooper	BENSALEM	PA	1	101000117	Cooper Franklin	CooperFranklin5	De Pere, WI	cooper franklin	WI	WI
+10038	franklin	cooper	BENSALEM	PA	1	101000118	Cooper Franklin	Funsize4Franklin	""	cooper franklin funsize		
+10038	franklin	cooper	BENSALEM	PA	1	101000119	Cooper Franklin	loosedogfrom_ms	mississippi	cooper franklin loosedogfrom ms	MS	MS
+10038	franklin	cooper	BENSALEM	PA	1	101000120	Franklin Cooper	FranklinCooperIV	""	franklin cooper iv cooperiv		
+10038	franklin	cooper	BENSALEM	PA	1	101000121	FRANKLIN COOPER	franklin7635130	""	franklin cooper in		
+10038	franklin	cooper	BENSALEM	PA	1	101000122	Franklin Cooper	CooperFrankie12	""	franklin cooper rankie frankie		
+10038	franklin	cooper	BENSALEM	PA	1	101000123	Cooper Franklin	cooperfrank2017	""	cooper franklin frank		
+10040	franklin	cox	MEMPHIS	TN	1	101000124	Franklin Cox	Frank_Cox_Agency	Mansfield, TX	franklin cox agency frank	TX	TX
+10040	franklin	cox	MEMPHIS	TN	1	101000125	franklin cox	sparkyno8	""	franklin cox sparkyno		
+10040	franklin	cox	MEMPHIS	TN	1	101000126	Franklin Cox	Frank_V_Cox	Atlanta	franklin cox frank	GA	GA
+10040	franklin	cox	MEMPHIS	TN	1	101000127	Franklin (P)unis Cox	Dirtyfrank	""	franklin unis cox dirtyfrank		
+10054	deborah	porto	LEXINGTON	KY	1	101000128	Deborah Regina Porto	deborah2portobra	""	deborah regina porto bra portobra		
+10054	deborah	porto	LEXINGTON	KY	1	101000129	Deborah Porto	00421837e29543b	""	deborah porto		
+10054	deborah	porto	LEXINGTON	KY	1	101000130	Deborah Regina Porto	deborah_porto	""	deborah regina porto		
+10054	deborah	porto	LEXINGTON	KY	1	101000131	deborah bruna porto	deborahporto	""	deborah bruna porto		
+10058	deborah	posey	HOLLYWOOD	CA	1	101000132	Deborah Posey	Tweet2day	Weston WV	deborah posey tweet ay day	WV	WV
+10062	david	portman	NEW ORLEANS	LA	1	101000133	David Porter	daviePortman	""	david porter ortman avie portman davie		
+10062	david	portman	NEW ORLEANS	LA	1	101000134	David Portman	Brian_Coys	London	david portman brian coys	foreign	foreign
+10062	david	portman	NEW ORLEANS	LA	1	101000135	David Teager-Portman	Teager_Portman	UK	david teager portman	foreign	foreign
+10062	david	portman	NEW ORLEANS	LA	1	101000136	Rebecca Portman	DavidPortman4	""	rebecca portman david		
+10062	david	portman	NEW ORLEANS	LA	1	101000137	David Portman	TheTrueAwesome	""	david portman awesome true the		
+10062	david	portman	NEW ORLEANS	LA	1	101000138	David Portman	lionbar2010	Birmingham, England	david portman lionbar	foreign	foreign
+10062	david	portman	NEW ORLEANS	LA	1	101000139	David J Portman MD	Dportman_David	Columbus, Ohio	david portman md	OH	OH
+10062	david	portman	NEW ORLEANS	LA	1	101000140	david portman	bobby_boy_97	""	david portman bobby boy		
+10062	david	portman	NEW ORLEANS	LA	1	101000141	David Portman	portman_d	""	david portman		
+10062	david	portman	NEW ORLEANS	LA	1	101000142	david portman	DavidRPortman	""	david portman davidr		

@@ -1,0 +1,127 @@
+england
+scotland
+wales
+birmingham
+leeds
+glasgow
+sheffield
+manchester
+edinburgh
+bristol
+cardiff
+leicester
+wakefield
+coventry
+nottingham
+newcastle
+essex
+york
+
+Alberta 	
+Edmonton 	
+Calgary
+British Columbia 	
+Victoria 	
+Manitoba 	
+Winnipeg 	
+New Brunswick 	
+Fredericton 	
+Newfoundland 
+Labrador 	
+St. John's 	
+St Johns 	
+Nova Scotia 
+Halifax 	
+Ontario 	
+Toronto 
+Prince Edward Island 	
+Charlottetown 	
+Quebec 	
+Quebec City 	
+Saskatchewan 	
+Regina 	
+Northwest Territories 	
+Yellowknife 	
+Nunavut 	
+Iqaluit 	
+Yukon 	
+Whitehorse 	
+Vancouver
+Montreal
+
+
+australia
+New South Wales
+Northern Territory
+Queensland
+South Australia
+Tasmania
+Victoria
+Western Australia
+Sydney
+Darwin
+Brisbane
+Adelaide
+Hobart
+Melbourne
+Perth
+Auckland
+NZ
+
+Avon
+Bedfordshire
+Berkshire
+Buckinghamshire
+Cambridgeshire
+Cheshire
+Cornwall
+Cumberland
+Cumbria
+Derbyshire
+Devon
+Dorset
+Suffolk
+Sussex
+Gloucestershire
+London
+Manchester
+Hampshire
+Hereford
+Worcester
+Herefordshire
+Hertfordshire
+Humberside 
+Huntingdon 
+Peterborough
+Huntingdonshire
+Isle of Ely
+Isle of Wight
+Kent
+Lancashire
+Leicestershire
+Lincolnshire 
+Merseyside
+Middlesex
+Northamptonshire
+Northumberland
+North Humberside
+Nottinghamshire
+Oxfordshire
+Peterborough
+Rutland
+Shropshire
+Somerset 
+South Humberside
+Staffordshire
+Suffolk
+Surrey
+Sussex
+Tyne
+Wear
+Warwickshire
+West Midlands
+Westmorland 
+Wiltshire
+Worcestershire
+Yorkshire
+

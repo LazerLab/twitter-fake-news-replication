@@ -1,0 +1,60 @@
+voter_id	first_name	last_name	city	state	state_count	numCandidateMatches
+10004	patricia	azar	BROOKLYN	NY	1	6
+10005	patricia	bacher	FRESNO	CA	1	0
+10006	patricia	bailey hand	PHILADELPHIA	PA	1	0
+10007	patricia	bell	HATBORO	PA	1	0
+10008	patricia	belser	LANCASTER	PA	1	1
+10009	patricia	bowers	PHILADELPHIA	PA	1	5
+10010	patricia	boyce	LANCASTER	PA	1	5
+10011	ana	brong	BROOKLYN	NY	1	0
+10012	ana	reyes	SACRAMENTO	CA	1	0
+10013	ana	rivera	MOUNT CARMEL	PA	1	0
+10014	anna	rodriguez	YORK	PA	1	0
+10015	anna	santos	AURORA	CO	1	0
+10016	anna	solis	WASHINGTON	PA	1	0
+10017	anna	vargas	COLUMBUS	OH	1	0
+10018	isabelle	hernandez	ALLENTOWN	PA	1	0
+10019	isabelle	alleman	BUTLER	PA	1	0
+10020	isabelle	amaker	YEADON	PA	1	0
+10021	isabelle	amarose	KITTANNING	PA	1	0
+10022	isabelle	anderson	BROOKLYN	NY	1	0
+10023	alvin	arduini	INDIANA	PA	1	0
+10024	alvin	atchison	UPPER DARBY	PA	1	0
+10025	alvin	auberzinsky	STROUDSBURG	PA	1	0
+10026	alvin	brown	COLUMBUS	OH	2	-98
+10027	alvin	brown	COLUMBUS	OH	2	-98
+10028	alvira	cardonick	COLUMBUS	OH	1	0
+10029	samuel	burns	MALVERN	PA	1	0
+10030	samuel	bureski	HARRISBURG	PA	1	0
+10031	frank	bundy	PALMYRA	PA	1	2
+10032	frank	cain	WALLINGFORD	ME	1	9
+10033	frank	clark	CONNELLSVILLE	OH	3	-98
+10034	frank	clark	COLUMBUS	OH	3	-98
+10035	frank	clark	YORK	OH	3	-98
+10036	frank	collins	ESSINGTON	PA	1	0
+10037	franklin	coombs	ERIE	PA	1	0
+10038	franklin	cooper	BENSALEM	PA	1	10
+10039	franklin	coverdale	DREXEL HILL	PA	1	0
+10040	franklin	cox	MEMPHIS	TN	1	4
+10041	franklin	cracchiolo	UPPER CHICHESTER	PA	1	0
+10042	franklin	cramer	N HUNTINGDON	PA	1	0
+10043	franklin	crandley	COLLEGEVILLE	PA	1	0
+10044	franklin	cymbor	CASSVILLE	PA	1	0
+10045	franklin	d arcangelo	WEST CHESTER	CT	1	0
+10046	franklin	clarke	PATTON	CT	1	0
+10047	franklin	clemens	WINDBER	PA	1	0
+10048	franklin	davis	MEMPHIS	TN	2	-98
+10049	franklin	davis	MEMPHIS	TN	2	-98
+10050	franklin	diemand	BLOOMINGTON	IN	1	0
+10051	franklin	dirling	MEMPHIS	TN	2	-98
+10052	franklin	dirling	MEMPHIS	TN	2	-98
+10053	franklin	portnoy	MEMPHIS	TN	1	0
+10054	deborah	porto	LEXINGTON	KY	1	4
+10055	deborah	portock	STOCKTON	CA	1	0
+10056	deborah	ports	LONG BEACH	CA	1	0
+10057	deborah	portwood	COCONUT CREEK	FL	1	0
+10058	deborah	posey	HOLLYWOOD	CA	1	1
+10059	deborah	posgai	ORLANDO	FL	1	0
+10060	david	dodson	PENSACOLA	FL	2	-98
+10061	david	dodson	PORT ORANGE	FL	2	-98
+10062	david	portman	NEW ORLEANS	LA	1	10

@@ -1,0 +1,144 @@
+id	date_created	name	screen_name	location	nameHandleWords
+101000000	2015-01-06	*bibin*	binarbibinwiyar	bandung	bibin binar wiyar bibinwiyar
+101000001	2015-01-06	name. sabir 			name sabir 
+101000002	2015-01-06	sam undercuffler	samunder34		sam undercuffler under
+101000003	2015-01-06	nadia fradita	NadiaFradita	Bukittinggi	nadia fradita 
+101000004	2015-01-06	七夕	yurikaniT		qi xi yurikanit
+101000005	2015-01-06	Sabri Chandia	SabriChandia		sabri chandia 
+101000006	2015-01-06	ていく	yuzukitake		teiku yuzukitake
+101000007	2015-01-06	oğuzhan yileç	oyilec		oguzhan yilec 
+101000008	2015-01-06	Lorenzo Recio	leprechaun2012		lorenzo recio eprechaun leprechaun
+101000009	2015-01-06	Angel Gutierrez	AngelGu39440956	Jojutla Morelos Mexico	angel gutierrez gu
+101000010	2015-01-06	Glenda primera 	GlendaPrimera		glenda primera 
+101000011	2015-01-06	Rini Nova Sari	novANGELS1004	Indonesia	rini nova sari ngels novangels
+101000012	2015-01-06	Jennifer Nguyen	jennhnguyen	Nashville, TN	jennifer nguyen ennh jennh
+101000013	2015-01-06	Monarch Beatz	MyBeatPalace	Your Beat Folder	monarch beatz palace my beat
+101000014	2015-01-06	Tumelo	Lebeta_De_III	Pretoria, South Africa	tumelo lebeta iii de
+101000015	2015-01-06	Gotti	KingZell215	Uptown U.S.A.	gotti king zell
+101000016	2015-01-06	Caruel De Lmrc Lee	thereallee33		caruel de lmrc lee thereal
+101000017	2015-01-06	koray akbaş	korayakbas	kıbrıs	koray akbas 
+101000018	2015-01-06	Jae Hee Kim	Riliekim		jae hee kim rilie
+101000019	2015-01-06	SaiThatLowe	JustBLUIt	Traveling Prolly	saithatlowe sai that lowe just it
+101000020	2015-01-06	ナナハタ	amakusa_kikyo		nanahata amakusa kikyo
+101000021	2015-01-06	hawkins_girl	kyla_stjohn		hawkins girl stjohn kyla
+101000022	2015-01-06	ナ    ン	natuparm		na tuparm natuparm
+101000023	2015-01-06	ريميه محمد آل الشيخ	Alshaikh_r	Kingdom of Saudi Arabia	rymyh mhmd al alshykh shaikh alshaikh
+101000024	2015-01-06	andri_R Tamaka	andri_RTamaka	Jakarta	andri tamaka 
+101000025	2015-01-06	Michelle Kuzdzal	msek1468		michelle kuzdzal sek msek
+101000026	2015-01-06	Wasabi Towers 	ALOHASAYURI		wasabi towers alohasayuri
+101000027	2015-01-06	Pickel Fickle	pickelfickle	London	pickel fickle 
+101000028	2015-01-06	Josuandres	josueand04	Callao, Peru	josuandres osueand josueand
+101000029	2015-01-06	Patricia Nergino	PatriciaNergin0	Codó	patricia nergino nergin
+101000030	2015-01-06	Aj Levendusky	A_Leven10		aj levendusky leven
+101000031	2015-01-06	Mikhail Legaspi	ako_si_makmak	calaocan,Alicia,isabela	mikhail legaspi akmak ako si makmak
+101000032	2015-01-06	.              abril	abbrilnicole		abril bbrilnicole abbrilnicole
+101000033	2015-01-06	meggie	meghanaliciaa		meggie eghanaliciaa meghanaliciaa
+101000034	2015-01-06	Jacob Dittmer	jdittmer81	Portland, OR	jacob dittmer 
+101000035	2015-01-06	❤mmmmh❤	Boss_m14		mmmmh boss
+101000036	2015-01-06	Taulant Morina	tala_m13		taulant morina ala tala
+101000037	2015-01-06	うえもと	tetsuyaaan831	立命館大学ALL.1	uemoto tetsuyaaan
+101000038	2015-01-06	Alejandra López.	alejandra091099		alejandra lopez 
+101000039	2015-01-06	たけし	udadehande		takeshi udadehande
+101000040	2015-01-06	junior Veronichker	Veronichker	rio de janeiro	junior veronichker 
+101000041	2015-01-06	Ms. Harris	Gibby2H		ms harris gibby
+101000042	2015-01-06	ARI$H	ArishRB		ari shrb arishrb
+101000043	2015-01-06	Kaidan	yungkrustboy		kaidan yungkrustboy
+101000044	2015-01-06	かっつ	kyatuo_1967		kattsu yatuo kyatuo
+101000045	2015-01-06	Jacob Norman	NormanJacob14		jacob norman 
+101000046	2015-01-06	#InfoTeman	teman_group	palu Sulawesi-Tengah	infoteman info teman group
+101000047	2015-01-06	Blanché	queentuckk	919 | 336	blanche queentuckk
+101000048	2015-01-06	Follow  TTNS PAK			follow ttns pak 
+101000049	2015-01-06	♡	SofiSol703		 sofi sol
+101000050	2015-01-06	Æ˜á—©áŽ¥âœžâ„“Ð£Ð˜   Ð˜áŽ¥á‘•âš™â„“ÆŽâš“	norris_k014		ae az aoeza astma aezas as ma zas norris
+101000051	2015-01-06	Brandyn Harrison	bcardinalsh		brandyn harrison cardinalsh bcardinalsh
+101000052	2015-01-06	Ơ̴̴͡.̮Ơ̴̴̴͡ŸånÇï§ =)	tamaraestrada32		oyanci yan ci tamaraestrada
+101000053	2015-01-06	A n i t a_Soch	50chi_7	 Guatemala	soch chi
+101000054	2015-01-06	Walter Bergeson	WalterBergeson	Atlanta, GA	walter bergeson 
+101000055	2015-01-06	AppleHolic  ï£¿	bill6725	ëŒ€í•œë¯¼êµ­	appleholic apple holic bill
+101000056	2015-01-06	Lulita  -	LulittaQuemeraa	Parque Patricios	lulita quemeraa ulitta lulitta
+101000057	2015-01-06	You	agid24		you agid
+101000058	2015-01-06	Bish whaa?	_illuminaughtyx		bish whaa illuminaughtyx
+101000059	2015-01-06	Piffpuffington	brandynball15		piffpuffington brandynball
+101000060	2015-01-06	まさぉ	masaosanba		masa sanba osanba
+101000061	2015-01-06	Ana Salazar	ChunitaAna		ana salazar chunita
+101000062	2015-01-06	Lisa Gerwitz	Lisa_Gerwitz		lisa gerwitz 
+101000063	2015-01-06	Artneil Fernandez	artneilofficial	Iloilo City	artneil fernandez official artneilofficial
+101000064	2015-01-06	BSACSBSJU	BSACSBSJU	Saint Joseph, MN	bsacsbsju 
+101000065	2015-01-06	GIOVANNY RINCON 	GIOVANNYRINCONB	CUCUTA COLOMBIA	giovanny rincon rinconb
+101000066	2015-01-06	Ashley Cebulka	ashcebulka	Charleston, SC 	ashley cebulka ash
+101000067	2015-01-06	Karagat Project	KaragatProject	Balykchy	karagat project 
+101000068	2015-01-06	Lu 	Luu_Artola	Argentina	lu artola luu
+101000069	2015-01-06	Rick Duarte	Dah_Rick		rick duarte ah dah
+101000070	2015-01-06	Phanor Duque Q	phaduque	Bogotá DC	phanor duque pha
+101000071	2015-01-06	Juan Moreno	JuanMoreno451		juan moreno 
+101000072	2015-01-06	Danielle Hardwick	DanniiHardwick		danielle hardwick annii dannii
+101000073	2015-01-06	Alejandro Lopez	aalejandrolopez	ÜT: 10.24758,-68.003195	alejandro lopez 
+101000074	2015-01-06	Isaac Gomez	Is7Gogo		isaac gomez ogo gogo is
+101000075	2015-01-06	VacumBeberapaHari❤	OFC_CassieV	Followed By Cassie: 7-04-2015	vacumbeberapahari vacum beberapa hari cassie
+101000076	2015-01-06	Union	unioneav	485 Flat Shoals Ave. Atl, GA	union eav unioneav
+101000077	2015-01-06	testmonstar01	testmonstar01		testmonstar 
+101000078	2015-01-06	Consu Silva	Consu_Silva		consu silva 
+101000079	2015-01-06	Mayu	MustikaAyuT	Kediri, East Java, Indonesia	mayu mustika ayu
+101000080	2015-01-06	Trevor Lipply	TrevorLipply		trevor lipply 
+101000081	2015-01-06	Sam ♡	cejasdejos	Nuevo León, México	sam cejasdejos
+101000082	2015-01-06	Elisia Saam-Quinty	ElisiaSQ	Ottawa, Ontario Canada	elisia saam quinty 
+101000083	2015-01-06	Roberto Lopez	TyrantWerwolf	Ciudad de Mexico	roberto lopez werwolf tyrant
+101000084	2015-01-06	Fitria Suci	fitriasuci2		fitria suci 
+101000085	2015-01-06	Î¨Î©UÎ G HÎ£ÒÎ£ HÎ©Î£âï¸	yooo00_		ui hi yooo
+101000086	2015-01-06	PATRICIA ALCAZAR	alcazar5817		patricia alcazar azar cazar
+101000087	2015-01-06	patricia miriam azar	MiriamAzar		patricia miriam azar 
+101000088	2015-01-06	Patricia Olvera	72_azar	Maryland	patricia olvera azar
+101000089	2015-01-06	Patricia	TrishAzar		patricia trish azar
+101000090	2015-01-06	patricia SALAZAR	Salazar07Paty		patricia salazar azar aty lazar paty
+101000091	2015-01-06	Patricia azar	patricia_azar	lebanon	patricia azar 
+101000092	2015-01-06	PatBel	belser_patricia		patbel pat bel ricia ser patricia belser
+101000093	2015-01-06	Patricia Bowers	anershova12267		patricia bowers anershova
+101000094	2015-01-06	Patricia Bowers	PDDbowers	Grove Oak, Alabama	patricia bowers dd pdd
+101000095	2015-01-06	Patricia bowers	patricia_dee		patricia bowers dee
+101000096	2015-01-06	Patricia Bowers	bowersPattyjo	Dayton, Nevada	patricia bowers attyjo pattyjo
+101000097	2015-01-06	Patricia Bowers	Patrici54092263		patricia bowers patrici
+101000098	2015-01-06	Patricia Boyce	pboyce725		patricia boyce 
+101000099	2015-01-06	Patricia Boyce	Patty70_Boyce		patricia boyce atty patty
+101000100	2015-01-06	patricia boyce	patriciaboyce528		patricia boyce 
+101000101	2015-01-06	patricia ann boyce	patriciaanneboyc	pennsville, nj	patricia ann boyce eboyc anneboyc
+101000102	2015-01-06	Patricia Boyce	PatyPatyBarbosan		patricia boyce arbosan aty paty barbosan
+101000103	2015-01-06	Frank Bundy	frankbundelicious	Cheektowaga, NY	frank bundy undelicious bundelicious
+101000104	2015-01-06	Frank Bundock	FBundy19	westfield	frank bundock undy bundy
+101000105	2015-01-06	Frank Cain	FrankCain5		frank cain 
+101000106	2015-01-06	Frank Cain	6dca376c6007471		frank cain dca
+101000107	2015-01-06	Frank Cain	CainFrank	Madison, WI	frank cain 
+101000108	2015-01-06	FrankYnStein	MarkOfCain15		frankynstein frank yn stein mark cain of
+101000109	2015-01-06	Frank Cain	FcainCain		frank cain caincain
+101000110	2015-01-06	Frank Cain	GeelongRoofer	Geelong, Victoria	frank cain geelong roofer
+101000111	2015-01-06	Frank Cain	FrankCain14		frank cain 
+101000112	2015-01-06	frank cain	gateshead1947		frank cain gateshead
+101000113	2015-01-06	Cain Sophia	FrankWord		cain sophia frank word
+101000114	2015-01-06	Cooper Franklin	KnowLegde_		cooper franklin legde know
+101000115	2015-01-06	franklin cooper	FranklinWiked2	California	franklin cooper wiked franklinwiked
+101000116	2015-01-06	franklin cooper	rockinhardnow	Big Bear City, Ca.	franklin cooper rockinhardnow
+101000117	2015-01-06	Cooper Franklin	CooperFranklin5	De Pere, WI	cooper franklin 
+101000118	2015-01-06	Cooper Franklin	Funsize4Franklin		cooper franklin funsize
+101000119	2015-01-06	Cooper Franklin	loosedogfrom_ms	mississippi	cooper franklin loosedogfrom ms
+101000120	2015-01-06	Franklin Cooper	FranklinCooperIV		franklin cooper iv cooperiv
+101000121	2015-01-06	FRANKLIN COOPER	franklin7635130		franklin cooper in
+101000122	2015-01-06	Franklin Cooper	CooperFrankie12		franklin cooper rankie frankie
+101000123	2015-01-06	Cooper Franklin	cooperfrank2017		cooper franklin frank
+101000124	2015-01-06	Franklin Cox	Frank_Cox_Agency	Mansfield, TX	franklin cox agency frank
+101000125	2015-01-06	franklin cox	sparkyno8		franklin cox sparkyno
+101000126	2015-01-06	Franklin Cox	Frank_V_Cox	Atlanta	franklin cox frank
+101000127	2015-01-06	Franklin (P)unis Cox	Dirtyfrank		franklin unis cox dirtyfrank
+101000128	2015-01-06	Deborah Regina Porto	deborah2portobra		deborah regina porto bra portobra
+101000129	2015-01-06	Deborah Porto	00421837e29543b		deborah porto 
+101000130	2015-01-06	Deborah Regina Porto	deborah_porto		deborah regina porto 
+101000131	2015-01-06	deborah bruna porto	deborahporto		deborah bruna porto 
+101000132	2015-01-06	Deborah Posey	Tweet2day	Weston WV	deborah posey tweet ay day
+101000133	2015-01-06	David Porter	daviePortman		david porter ortman avie portman davie
+101000134	2015-01-06	David Portman	Brian_Coys	London	david portman brian coys
+101000135	2015-01-06	David Teager-Portman	Teager_Portman	UK	david teager portman 
+101000136	2015-01-06	Rebecca Portman	DavidPortman4		rebecca portman david
+101000137	2015-01-06	David Portman	TheTrueAwesome		david portman awesome true the
+101000138	2015-01-06	David Portman	lionbar2010	Birmingham, England	david portman lionbar
+101000139	2015-01-06	David J Portman MD	Dportman_David	Columbus, Ohio	david portman md 
+101000140	2015-01-06	david portman	bobby_boy_97		david portman bobby boy
+101000141	2015-01-06	David Portman	portman_d		david portman 
+101000142	2015-01-06	david portman	DavidRPortman		david portman davidr

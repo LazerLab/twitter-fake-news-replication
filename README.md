@@ -14,9 +14,9 @@ For each subfolder, the expectation is that the code is run from the top level d
 
 The only exception to this is the ```util``` directory, which contains code utilities leveraged throughout our analyses.
 
-## ```domains/domain_coding```
+## Domains (```domains/domain_coding```)
 
-This directory contains data files only that describe our labeling of websites.  The directory contains three files:
+This directory contains three data files that describe our labeling of websites:
 
 ```Domain Codings.xlsx``` - details on manual codings of fake news sites.
 
@@ -25,7 +25,7 @@ This directory contains data files only that describe our labeling of websites. 
 ```black_sites.txt``` - all black sites used in the present study.
 
 
-## ```figure_1```
+## Prevalence and concentration of fake news sources (```figure_1```)
 
 This folder contains code necessary to replicate Figure 1 in the paper. The data for subplot 1A
 
@@ -51,13 +51,24 @@ pct_black - percentage of all shares/exposures that were to/from black sites
 pct_fake - percentage of all shares/exposures that were to/from any fake news site
 ```
 
+## Supersharers and superconsumers (```panel_accounts/super_people_analyses```)
+
+Code for Figure 2 and Section S.9. 
+
+### Code
+- `generate_superspreaders_figure.R` generates Figure 2 under `img/bar.pdf` and `img/bar_exp.pdf`
+- `superPeopleAnalyses.R` generates data for Table S3. Its output is included here in `superPeopleAnalyses-out.txt`.
+
+### Data
+Both scripts rely on  `panel.tsv` from the restricted data release.
+
 ## Exposure, sharing, and sharing per exposure regressions
 
-The analysis in ```exp_share_regressions/exp_share_reg.Rmd``` covers the results that focus on the individual characteristics associated with exposure and sharing of fake news. These are reported in the main body of the paper (sections 'who was exposed to fake news sources?' and 'who shared fake news sources?' as well as in sections S11-13 of the supplamentary materials. 
+The analysis in ```exp_share_regressions/exp_share_reg.Rmd``` covers the results that focus on the individual characteristics associated with exposure and sharing of fake news. These are reported in the main body of the paper (sections 'who was exposed to fake news sources?' and 'who shared fake news sources?' as well as in sections S.11-13 of the supplementary materials. 
 
-While the data for replicating this analysis is available under restricted-access, the output of its execution on (de-identified data) is available for easy viewing in html format at ```exp_share_regressions/exp_share_reg.nb.html```.
+While the data for replicating this analysis is available under restricted-access, the output of its execution (on de-identified data) is available for easy viewing in html format at ```exp_share_regressions/exp_share_reg.nb.html```.
 
-## ```coexposure_network```
+## Coexposure network
 
 ### Code
 The script ```coexposure_network/analysis.R``` generates Figure 7 from the main text, as well as Figures S10 and S11 in the supplementary.
@@ -83,9 +94,33 @@ Additionally, note that with restricted access, you can construct the coexposure
 
 
 
-## ```political_urls/political_classifier_evaluation```
+## Panel construction (`panel_accounts/panel_construction`)
+Code and data for Section S.1. Has its own README.
 
-Code and data to replicate Figure S4 in the paper.
+## Panel representativeness (```panel_accounts/compare_to_pew```)
+
+Code and data to replicate Section S.2's Figure S1.
+
+### Code
+The script ```panel_accounts/compare_to_pew/analyze_representativeness_pew.R``` generates Figure S1 from the supplementary.
+
+### Data
+
+There are two files used in the script that are not available in this public data release:
+
+- ```restricted_data/pew_stats.csv``` contains data drawn directly from [PEW's 2016 Social Media update survey](http://www.pewinternet.org/dataset/march-2016-libraries/).
+
+- ```restricted_data/panel.tsv``` contains information on panel members (anonymized).
+
+
+
+
+## Political URLs (`political_urls/extract_urls` and `political_urls/political_classifier`)
+For Section S.3, extracting political URLs from the data. See the [README in `political_urls/extract_urls`](https://github.com/LazerLab/twitter-fake-news-replication/political_urls/extract_urls/README.md).
+
+## Political classifier evaluation (```political_urls/political_classifier_evaluation```)
+
+Code and data to replicate Figure S4 in Section S.4.
 
 ### Code
 The script ```political_urls/political_classifier_evaluation/figure_s4.R``` generates Figure S4, for the political classifier evaluation.
@@ -105,33 +140,7 @@ politics - N Turkers giving "U.S. politics in general
 answer - the final answer. This is a majority vote of turkers in most cases, if there was no agreement, its the decision of someone on our Northeastern team.
 is_pol - Did the classifier say it was about politics?
 ```
-## ```panel_accounts/compare_to_pew```
-
-Code and data to replicate Figure S1.
-
-### Code
-The script ```panel_accounts/compare_to_pew/analyze_representativeness_pew.R``` generates Figure S1 from the supplementary.
-
-### Data
-
-There are two files used in the script that are not available in this public data release:
-
-- ```restricted_data/pew_stats.csv``` contains data drawn directly from [PEW's 2016 Social Media update survey](http://www.pewinternet.org/dataset/march-2016-libraries/).
-
-- ```restricted_data/panel.tsv``` contains information on panel members (anonymized).
-
-## ```panel_accounts/super_people_analyses```
-
-Code for Figure 2 and Section S.9. 
-
-### Code
-- `generate_superspreaders_figure.R` generates Figure 2 under `img/bar.pdf` and `img/bar_exp.pdf`
-- `superPeopleAnalyses.R` generates data for Table S3. Its output is included here in `superPeopleAnalyses-out.txt`.
-
-### Data
-Both scripts rely on  `panel.tsv` from the restricted data release.
-
-## `panel_accounts/`: `profile_validation` and `outlier_validation`
+## Validation of panel accounts (`panel_accounts/`: `profile_validation` and `outlier_validation`)
 
 Code and results for Section S.8. 
 
@@ -146,8 +155,12 @@ its output is in ```results/03-out.txt```.
 
 ## Political affinity classifier
 
-The analysis in ```political_affinity/pol_affn.Rmd``` covers the results in S.10. and in Fig. 3 on the main body. This requires the ```restricted_data``` folder.
+The analysis in ```political_affinity/pol_affn.Rmd``` covers the results in S.10 and in Fig. 3 in the main body. This requires the ```restricted_data``` folder.
 
-## Concentration analysis for Section S.15
+## Concentration analyses for Section S.15
 
-Code for generating Figure S13 can be found at ```concentration/concentrate.Rmd```. This requires the ```restricted_data``` folder.
+* Code for generating Figure S13 can be found at ```concentration/concentrate.Rmd```. This requires the ```restricted_data``` folder.
+
+* Code for generating Figure S14 can be found at ```analyses/capping_simulation```	. Requires ```restricted_data``` for its files ```panel.tsv``` and ```urls.tsv.gz```.	
+    * ```cappingSimData.R``` generates the data files ```capping_preserved2.csv``` and ```origSums.Rdata``` (included here).	
+    * ```cappingPlot.R``` uses those files to create the plot ```img/cappingSim4.pdf``` (included here).

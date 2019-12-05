@@ -1,0 +1,112 @@
+stateLong	city	stateAbbrev
+New York 	New York City	NY
+New York 	NYC	NY
+New York 	Brooklyn	NY
+New York 	Long Island	NY
+New York 	Manhattan	NY
+California 	Los Angeles	CA
+Connecticut	New Haven	CT
+Illinois 	Chicago	IL
+Texas 	Houston	TX
+Pennsylvania 	Philadelphia	PA
+Pennsylvania 	Philly	PA
+Arizona 	Phoenix	AZ
+Texas 	San Antonio	TX
+California 	San Diego	CA
+Texas 	Dallas	TX
+California 	San Jose	CA
+Texas 	Austin	TX
+Florida 	Jacksonville	FL
+Indiana 	Indianapolis	IN
+Indiana 	Indy	IN
+California 	San Francisco	CA
+California 	SF	CA
+Ohio 	Columbus	OH
+Texas 	Fort Worth	TX
+North Carolina 	Charlotte	NC
+Michigan 	Detroit	MI
+Texas 	El Paso	TX
+Tennessee 	Memphis	TN
+Massachusetts 	Boston	MA
+Washington 	Seattle	WA
+Colorado 	Denver	CO
+District of Columbia 	Washington	DC
+District of Columbia 	Washington, D.C.	DC
+Tennessee 	Nashville	TN
+Maryland 	Baltimore	MD
+Kentucky 	Louisville	KY
+Oregon 	Portland	OR
+Oklahoma 	Oklahoma City 	OK
+Wisconsin 	Milwaukee	WI
+Nevada 	Las Vegas	NV
+Nevada 	Vegas	NV
+New Mexico 	Albuquerque	NM
+Arizona 	Tucson	AZ
+California 	Fresno	CA
+California 	Sacramento	CA
+California 	Long Beach	CA
+Missouri 	Kansas 	MO
+Arizona 	Mesa	AZ
+Virginia 	Virginia Beach	VA
+Georgia 	Atlanta	GA
+Colorado 	Colorado Springs	CO
+North Carolina 	Raleigh	NC
+Nebraska 	Omaha	NE
+Florida 	Miami	FL
+California 	Oakland	CA
+Oklahoma 	Tulsa	OK
+Minnesota 	Minneapolis	MN
+Ohio 	Cleveland	OH
+Kansas 	Wichita	KS
+Texas 	Arlington	TX
+Louisiana 	New Orleans	LA
+California 	Bakersfield	CA
+Florida 	Tampa	FL
+Hawaii 	Honolulu	HI
+California 	Anaheim	CA
+Colorado 	Aurora	CO
+California 	Santa Ana	CA
+Missouri 	St. Louis	MO
+California 	Riverside	CA
+Texas 	Corpus Christi	TX
+Pennsylvania 	Pittsburgh	PA
+Kentucky 	Lexington	KY
+California 	Stockton	CA
+Ohio 	Cincinnati	OH
+Minnesota 	St. Paul	MN
+Ohio 	Toledo	OH
+New Jersey 	Newark	NJ
+North Carolina 	Greensboro	NC
+Texas 	Plano	TX
+Nevada 	Henderson	NV
+Nebraska 	Lincoln	NE
+New York 	Buffalo	NY
+Indiana 	Fort Wayne	IN
+New Jersey 	Jersey 	NJ
+California 	Chula Vista	CA
+Florida 	Orlando	FL
+Florida 	St. Petersburg	FL
+Virginia 	Norfolk	VA
+Arizona 	Chandler	AZ
+Texas 	Laredo	TX
+Wisconsin 	Madison	WI
+North Carolina 	Durham	NC
+Texas 	Lubbock	TX
+North Carolina 	Winston-Salem	NC
+Texas 	Garland	TX
+Arizona 	Glendale	AZ
+Florida 	Hialeah	FL
+Nevada 	Reno	NV
+Louisiana 	Baton Rouge	LA
+Louisiana 	Shreveport	LA
+California 	Irvine	CA
+Virginia 	Chesapeake	VA
+Texas 	Irving	TX
+Arizona 	Scottsdale	AZ
+Nevada 	North Las Vegas	NV
+California 	Fremont	CA
+California 	San Bernardino	CA
+Idaho 	Boise	ID
+Alabama 	Birmingham	AL
+Anchorage 	Alaska	AK
+Grand Rapids	Michigan	MI
